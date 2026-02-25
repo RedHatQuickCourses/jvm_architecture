@@ -1,0 +1,22 @@
+#  JVM Diagnostics
+
+JVM Diagnostics
+===============
+
+Java Virtual Machine (JVM) diagnostics involves analyzing and troubleshooting issues within the JVM to ensure optimal performance and stability of Java applications. Key aspects of JVM diagnostics include:
+
+- **Heap Dump**: Analyzing heap dump files helps identify memory leaks and understand memory usage patterns. Tools like VisualVM, jmap, and jconsole can be used to generate and interpret heap dumps.
+
+- **Thread Dump**: Generating and interpreting thread dumps aids in identifying thread-related issues, such as deadlocks, thread starvation, or excessive thread counts. Tools like jstack can be used to produce thread dumps.
+
+- **Monitoring JVM Performance**: Regularly monitoring JVM performance metrics, such as CPU usage, memory consumption, garbage collection activity, and thread counts, helps detect potential issues before they impact application stability. Tools like JMC (Java Mission Control) and Java VisualVM provide comprehensive monitoring capabilities.
+
+Hands-on Lab:
+-------------
+
+* Setting up a Java development environment
+* Running Java applications with OpenJDK
+* Generating heap and thread dumps
+* Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)
+
+By understanding and applying JVM diagnostics techniques, developers can proactively address performance bottlenecks, memory leaks, and other issues, ensuring smooth operation of Java applications.

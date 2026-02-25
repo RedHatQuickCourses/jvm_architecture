@@ -1,0 +1,34 @@
+#  Components and purpose
+
+```
+== JRE (Java Runtime Environment): Components and Purpose
+
+The Java Runtime Environment (JRE) is a software package that contains everything required to run a Java application. It includes the Java Virtual Machine (JVM), core classes, and supporting files. Here's a detailed breakdown of its components and their purposes:
+
+1. **Java Virtual Machine (JVM):**
+   The JVM is the core of the JRE. It's a virtual machine that executes Java bytecode, providing a runtime environment for Java applications. The JVM is responsible for translating bytecode into native machine code, managing memory, and providing a secure execution environment.
+
+2. **Core Classes:**
+   These are the fundamental classes that form the foundation of the Java API. They include basic data structures, utility classes, and fundamental I/O capabilities. Core classes are essential for any Java application to run.
+
+3. **Supporting Files:**
+   These are additional files required for the proper functioning of Java applications. They include:
+
+   - **Deployment Technologies:** Java Web Start, Java Plug-in, and other deployment technologies that enable Java applications to be launched from a web browser or desktop.
+   - **Internationalization Support:** Resource bundles and locale-specific classes that enable Java applications to be adapted for different languages and regions.
+   - **Security Components:** Security providers, policy files, and other security-related components that ensure the safe execution of Java applications.
+
+The JRE is designed to be lightweight and can be installed on various platforms, making it possible to "write once, run anywhere" - a key principle of Java's cross-platform compatibility.
+
+**Hands-on Activity:**
+
+1. **Setting up a Java Development Environment:**
+   - Download and install the JRE from the official Oracle website or use an open-source alternative like OpenJDK.
+   - Verify the installation by checking the version in the command line using the command `java -version`.
+
+2. **Running a Java Application:**
+   - Compile a simple Java program using the command `javac MyProgram.java`.
+   - Run the compiled program using the command `java MyProgram`.
+
+This activity will help learners understand the role of the JRE in executing Java applications and familiarize them with basic Java development environment setup.
+```

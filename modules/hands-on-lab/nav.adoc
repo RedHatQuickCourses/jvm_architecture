@@ -1,0 +1,5 @@
+* xref:hands-on-lab.adoc[]
+** xref:setting-up-a-java-development-environment.adoc[]
+** xref:running-java-applications-with-openjdk.adoc[]
+** xref:generating-heap-and-thread-dumps.adoc[]
+** xref:analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.adoc[]

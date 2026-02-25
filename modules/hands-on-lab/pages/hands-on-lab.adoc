@@ -1,0 +1,15 @@
+#  Hands-on Lab
+
+**Hands-on Lab**
+
+This hands-on lab is designed to provide practical experience in setting up a Java development environment and running Java applications using OpenJDK. The lab covers the following key activities:
+
+- **Setting up a Java Development Environment**: Participants will learn to configure their development environment for Java applications, including installing necessary software and tools.
+
+- **Running Java Applications with OpenJDK**: The lab will guide participants through the process of executing Java applications using OpenJDK, a popular open-source implementation of the Java Platform.
+
+- **Generating Heap and Thread Dumps**: Participants will learn to generate heap dumps and thread dumps, which are crucial for diagnosing memory leaks and thread-related issues in Java applications.
+
+- **Analyzing Dumps Using Tools**: The lab will introduce participants to various tools such as VisualVM, jmap, and jstack, which can be used to analyze heap dump and thread dump files. This will help them understand how to interpret these files and identify potential problems in their Java applications.
+
+This hands-on lab is an essential part of the training, as it allows participants to apply their theoretical knowledge of JVM architecture, internals, garbage collection, and diagnostics in a practical setting.

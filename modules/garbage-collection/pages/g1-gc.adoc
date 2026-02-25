@@ -1,0 +1,37 @@
+#  G1 GC
+
+```
+== Garbage Collection
+
+- Overview of garbage collection
+- Different GC collectors:
+  - Serial GC
+  - Parallel GC
+  - CMS (Concurrent Mark Sweep) GC
+  - **G1 GC (Garbage-First Garbage Collector)**
+
+== G1 GC Details
+
+The G1 GC, introduced in Java 7, is a server-style collector designed for multiprocessor machines with large memories. It divides the heap into a set of equal-sized heap regions. The G1 GC aims to provide more predictable pause times and higher throughput compared to other collectors.
+
+- **Heap Structure**: The heap is divided into a set of equal-sized regions. These regions are further grouped into region groups, and the entire heap is divided into a set of these region groups.
+
+- **Garbage Collection Process**:
+  - **Marking**: G1 GC starts by marking live objects in the heap. It uses a combination of a card table and per-region mark bits to identify live objects.
+  - **Region Selection**: After marking, G1 GC selects regions with the most garbage for collection. This is where the "Garbage-First" name comes from.
+  - **Evacuation**: Live objects from the selected regions are evacuated to other regions, making space for new allocations.
+  - **Cleanup**: Finally, the collector cleans up the regions that were evacuated from, updating references and preparing for the next collection cycle.
+
+- **Pause Time Prediction**: G1 GC aims to provide more predictable pause times by dividing the heap into smaller regions and focusing on collecting the regions with the most garbage first. This approach helps minimize the impact of garbage collection on application performance.
+
+- **Region Sizing**: The size of the heap is divided into regions, which are typically 1-32 MB in size. This allows for more granular control over memory management and helps reduce fragmentation.
+
+- **Concurrent Marking**: G1 GC performs most of its work concurrently with the application threads, minimizing the impact on application performance.
+
+== Hands-on Lab
+
+- Setting up a Java development environment
+- Running Java applications with OpenJDK
+- Enabling G1 GC:
+  - Use the `-XX:+UseG1GC` JVM flag to enable G1 GC.
+  - Adjust heap size and region sizes using `-Xmx`, `-Xms`, `-XX

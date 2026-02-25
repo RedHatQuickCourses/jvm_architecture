@@ -1,0 +1,31 @@
+#  JRE (Java Runtime Environment):
+
+== JRE (Java Runtime Environment)
+
+The Java Runtime Environment (JRE) is a software package that enables Java applications to run on a computer. It consists of the Java Virtual Machine (JVM), core classes, and supporting files. The JRE does not include development tools such as a compiler or debugger, which are part of the Java Development Kit (JDK).
+
+**Components and Purpose**
+
+The JRE includes:
+
+1. **Java Virtual Machine (JVM):** The JVM is the core of the JRE. It is a virtual machine that executes Java bytecode, providing an abstract computing environment where applications can run. The JVM is responsible for managing the application's memory, providing security, and handling platform-independent execution of Java programs.
+
+2. **Core Classes:** These are the fundamental Java classes and methods that form the foundation of the Java API. They provide essential functionality for Java applications, such as input/output operations, data structures, and utility methods.
+
+3. **Supporting Files:** These include configuration files, localization files, and other resources necessary for the proper functioning of Java applications.
+
+**JRE vs JDK**
+
+While the JRE is designed for running Java applications, the JDK is a superset of the JRE, providing additional tools and components for developing Java applications. The JDK includes the JRE, along with development tools like the Java compiler (javac), Java debugger (jdb), and additional libraries for Java application development.
+
+**Choosing Between OpenJDK and Oracle JDK**
+
+When it comes to selecting a JRE, two popular options are OpenJDK and Oracle JDK. Both provide the necessary components for running Java applications, but they have some differences:
+
+- **OpenJDK:** This is an open-source implementation of the Java Platform, developed under the GNU General Public License (GNU GPL). It is widely adopted and supported by various vendors, including Red Hat. OpenJDK is free to use and offers a robust, community-driven development environment.
+
+- **Oracle JDK:** This is a commercial implementation of the Java Platform, developed and maintained by Oracle Corporation. While it includes additional features and support, it requires a paid license for commercial use.
+
+In most cases, OpenJDK is a suitable choice for running Java applications, as it provides the necessary functionality and is free to use. However, some organizations may prefer Oracle JDK for its additional features and commercial support.
+
+**Hands-on Activity:

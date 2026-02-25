@@ -1,0 +1,56 @@
+#  Running Java applications with OpenJDK
+
+== Running Java Applications with OpenJDK
+
+In this section, we will explore how to run Java applications using OpenJDK, one of the popular Java Development Kits (JDKs).
+
+### OpenJDK Overview
+
+OpenJDK is an open-source implementation of the Java Platform, Standard Edition (Java SE). It is maintained by Oracle and other vendors, with a significant contribution from the OpenJDK community. OpenJDK provides a compatible, production-ready environment for running Java applications.
+
+### Setting Up a Java Development Environment with OpenJDK
+
+To run Java applications with OpenJDK, you first need to set up a Java development environment. Here are the steps to do so:
+
+1. **Download OpenJDK**: Visit the official OpenJDK website (https://openjdk.java.net/) and download the appropriate version for your operating system.
+
+2. **Install OpenJDK**: Follow the installation instructions for your specific operating system. For example, on Ubuntu, you can use the following commands to install OpenJDK:
+
+   ```bash
+   sudo apt update
+   sudo apt install openjdk-<version>-jdk
+   ```
+
+   Replace `<version>` with the desired OpenJDK version (e.g., 8, 11, or 17).
+
+3. **Verify Installation**: After installation, verify that OpenJDK is correctly installed by checking the Java version:
+
+   ```bash
+   java -version
+   ```
+
+   You should see output similar to the following, indicating the installed OpenJDK version:
+
+   ```
+   openjdk version "11.0.11" 2020-12-08
+   OpenJDK Runtime Environment (build 11.0.11+9)
+   OpenJDK 64-Bit Server VM (build 11.0.11+9, mixed mode, sharing)
+   ```
+
+### Running Java Applications with OpenJDK
+
+Now that you have OpenJDK installed and verified, you can run Java applications using the `java` command followed by the fully qualified name of the class containing the `main` method.
+
+1. **Compile Java Source Code**: First, compile your Java source code (.java files) into bytecode (.class files) using the `javac` command:
+
+   ```bash
+   javac MyJavaClass.java
+   ```
+
+2. **Run Java Applications**: Execute the compiled Java class using the `java` command:
+
+   ```bash
+   java MyJavaClass
+   ```
+
+### Hands-

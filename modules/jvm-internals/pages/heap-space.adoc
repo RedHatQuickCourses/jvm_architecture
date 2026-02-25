@@ -1,0 +1,24 @@
+#  Heap space
+
+== Heap Space
+
+The heap is a critical component of the Java Virtual Machine (JVM) memory management system. It is a large pool of memory that the JVM reserves for dynamic memory allocation during the execution of a Java application. The heap is divided into several areas, each serving a unique purpose.
+
+- **Heap Memory**: This is the primary area where objects are allocated during the execution of a Java program. The heap memory is further divided into different generations to optimize garbage collection.
+
+- **Young Generation**: This area is further divided into Eden space and two survivor spaces (Survivor 0 and Survivor 1). When a new object is created, it is initially placed in the Eden space. As objects survive garbage collection cycles, they are moved to one of the survivor spaces. Objects that survive multiple cycles are eventually promoted to the Old Generation.
+
+- **Old Generation (Tenured Generation)**: This area contains long-lived objects. The objects that survive multiple garbage collection cycles in the Young Generation are eventually promoted to the Old Generation.
+
+- **Permanent Generation (Metaspace in Java 8 and later)**: This space stores class-related data, such as method and field data. In Java 8 and later, the Permanent Generation has been replaced with Metaspace, which is not part of the JVM heap but is instead allocated outside the heap.
+
+The size of the heap can be configured using JVM options. The `-Xms` option sets the initial heap size, and the `-Xmx` option sets the maximum heap size. For example, `-Xms512m` sets the initial heap size to 512 MB, and `-Xmx1024m` sets the maximum heap size to 1024 MB.
+
+Understanding the heap space and its divisions is crucial for optimizing the performance of Java applications. By tuning the heap size and generations, developers can minimize garbage collection pauses and improve application responsiveness.
+
+**Hands-on Activity:**
+
+1. Set up a Java development environment.
+2. Write a simple Java program that creates a large number of objects.
+3. Run the program using OpenJDK with different heap sizes (`-Xms` and `-Xmx`) and observe the behavior.
+4. Generate heap dumps using tools like `jmap` and analyze them

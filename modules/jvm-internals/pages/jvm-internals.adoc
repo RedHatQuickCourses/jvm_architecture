@@ -1,0 +1,21 @@
+#  JVM Internals
+
+```
+JVM Internals
+============
+
+JVM internals refer to the internal workings and components of the Java Virtual Machine (JVM). Understanding JVM internals is crucial for optimizing Java applications and diagnosing performance issues. Here are the key aspects:
+
+- **Memory Management**
+  - **Heap Space**: The primary memory area where Java objects are allocated. It's divided into different generations (Young, Old, Permanent) to optimize garbage collection.
+  - **Native Memory**: Memory outside the JVM heap, used for native libraries and JVM metadata.
+  - **Permanent Generation (Meta Space)**: In Java 8 and earlier, this area stored class metadata. In Java 9 and later, it's replaced by the Metaspace.
+
+- **Class Loader**
+  - The class loader is responsible for loading classes into the JVM. It ensures that the correct versions of classes are loaded and manages class paths.
+  - JVM has a hierarchy of class loaders: Bootstrap, Extension, System, and Application.
+
+Hands-on activities could include:
+- Analyzing JVM memory usage with tools like VisualVM.
+- Investigating class loading behavior using debugging tools.
+```

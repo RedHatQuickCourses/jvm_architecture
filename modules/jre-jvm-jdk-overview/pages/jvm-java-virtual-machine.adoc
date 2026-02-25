@@ -1,0 +1,37 @@
+#  JVM (Java Virtual Machine):
+
+== JVM (Java Virtual Machine) Overview
+
+The Java Virtual Machine (JVM) is a crucial component in the Java ecosystem, providing a runtime environment for Java applications to execute. When you run a Java program, the JVM is automatically created to interpret and execute the bytecode.
+
+**JRE, JVM, and JDK**
+
+- **JRE (Java Runtime Environment):** The JRE contains the JVM, along with libraries and components necessary to run Java applications. It does not include development tools like a compiler or debugger.
+
+- **JVM (Java Virtual Machine):** The JVM is responsible for executing Java bytecode. It provides a runtime environment for Java applications, abstracting the underlying hardware and operating system.
+
+- **JDK (Java Development Kit):** The JDK is a superset of the JRE, containing additional development tools such as the Java compiler (javac), archiver (jar), and other utilities necessary for developing Java applications.
+
+**OpenJDK vs Oracle JDK**
+
+OpenJDK and Oracle JDK are two popular implementations of the JVM. OpenJDK is an open-source implementation developed by Oracle and the Java community, while Oracle JDK is the proprietary version developed by Oracle. Both have similar features, but Oracle JDK includes additional software and support.
+
+== JVM Internals
+
+**Memory Management**
+
+The JVM manages memory through a combination of heap and non-heap memory areas.
+
+- **Heap Space:** This is the primary memory area where objects are allocated during the execution of a Java program. The heap space is divided into different generations (Young, Old, and Permanent) to optimize garbage collection.
+
+- **Native Memory:** This memory area is used for native methods, class metadata, and other internal JVM data structures.
+
+- **Permanent Generation (Meta Space):** In Java 8 and earlier, the Permanent Generation (PG) stored class metadata, such as method and field data. In Java 9 and later, the PG has been replaced by the Metaspace, which is part of the non-heap memory and grows with the application's needs.
+
+**Class Loader**
+
+The class loader is responsible for loading Java classes into the JVM. It follows a hierarchical structure, ensuring that classes are loaded from the appropriate sources, such as the bootstrap classpath, extension classpath, and application classpath.
+
+== Garbage Collection
+
+Garbage collection is an automatic memory management process in the JVM that reclaims memory occupied by objects that

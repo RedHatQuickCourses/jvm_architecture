@@ -1,0 +1,22 @@
+#  Garbage Collection
+
+**Garbage Collection**
+
+Garbage collection is an automatic memory management process in the Java Virtual Machine (JVM) that reclaims memory occupied by objects that are no longer in use by the application. This process is crucial for managing memory efficiently and preventing memory leaks.
+
+- **Minor GC (Young Generation):** This type of garbage collection focuses on reclaiming memory occupied by objects in the young generation. It occurs frequently due to the short lifespan of most objects.
+
+- **Major GC (Old Generation):** Also known as a "full GC," major garbage collection deals with reclaiming memory in the old generation. It takes longer as it involves a larger area of memory. Major GC is a "stop-the-world" process, halting the JVM during its execution.
+
+- **Permanent Generation (Meta Space):** This space, now called the "meta space," stores metadata required by the JVM to describe classes and methods. It is separate from the heap space and has its own garbage collection mechanism.
+
+- **Garbage Collection Algorithms:** Various algorithms, such as Serial GC, Parallel GC, CMS (Concurrent Mark Sweep) GC, and G1 GC, are employed to optimize garbage collection based on application requirements and hardware capabilities.
+
+- **Heap Dump and Thread Dump:** These diagnostic tools help analyze memory usage and thread states, respectively. Heap dump files provide insights into object allocations and potential memory leaks, while thread dumps help identify issues related to thread states and blocking.
+
+**Hands-on Lab:**
+
+- Setting up a Java development environment
+- Running Java applications with OpenJDK
+- Generating heap and thread dumps
+- Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)

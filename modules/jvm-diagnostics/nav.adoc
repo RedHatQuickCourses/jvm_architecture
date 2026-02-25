@@ -1,0 +1,7 @@
+* xref:jvm-diagnostics.adoc[]
+** xref:heap-dump.adoc[]
+** xref:understanding-heap-dump-files.adoc[]
+** xref:analyzing-heap-dumps-for-memory-leaks.adoc[]
+** xref:thread-dump.adoc[]
+** xref:generating-and-interpreting-thread-dumps.adoc[]
+** xref:identifying-thread-issues.adoc[]

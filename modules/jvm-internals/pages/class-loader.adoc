@@ -1,0 +1,34 @@
+#  Class Loader
+
+== Class Loader
+
+Class loaders are a crucial part of the Java Virtual Machine (JVM) architecture, responsible for loading class files during the execution of a Java program. They are a subsystem of the Java Language Specification (JLS) and play a significant role in the Java runtime environment (JRE).
+
+### Class Loader Hierarchy
+
+There are three primary class loaders in the JVM:
+
+1. **Bootstrap Class Loader**: This is the most fundamental class loader, responsible for loading core Java classes located in the `rt.jar` file. It is part of the JVM implementation and is always present.
+
+2. **Extension Class Loader**: This class loader is responsible for loading classes from the `jre/lib/ext` directory and the `JAVA_HOME/lib/ext` directory. It is used to load classes that extend the Java platform, such as those provided by vendors.
+
+3. **System/Application Class Loader**: This is the class loader used by the application to load classes from the classpath, including the user's application code. It delegates the loading of classes to its parent class loader (usually the extension class loader) before attempting to load the class itself.
+
+### Class Loader Delegation Model
+
+The JVM follows a delegation model for class loading, which ensures that the class loader first delegates the loading of classes to its parent before attempting to load them itself. This model helps maintain a clear separation of concerns and prevents class loading conflicts.
+
+### Class Loader and Memory Management
+
+The class loader plays a role in memory management, particularly in the management of the **Permanent Generation (Meta Space)**. The meta space stores class-related data, such as method data and fields, and its lifetime matches that of the class loader. This means that as long as the class loader is alive, the meta data remains alive in the meta space and cannot be freed up.
+
+### Hands-on Lab: Class Loader
+
+To gain a better understanding of class loaders, let's consider a hands-on lab. In this lab, you will:
+
+1. Set up a Java development environment.
+2. Examine the class loading process by creating custom class loaders.
+3. Observe how the delegation model works in practice.
+4. Investigate class loading issues and how to troubleshoot them.
+
+This lab will provide practical experience in working with class loaders and understanding their role in the JVM

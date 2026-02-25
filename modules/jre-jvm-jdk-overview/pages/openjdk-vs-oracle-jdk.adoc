@@ -1,0 +1,33 @@
+#  OpenJDK vs Oracle JDK
+
+== OpenJDK vs Oracle JDK
+
+OpenJDK and Oracle JDK are both Java Development Kits (JDKs), but they have distinct differences in terms of licensing, support, and updates.
+
+- **OpenJDK**:
+  - OpenJDK is an open-source implementation of the Java Platform, Standard Edition (Java SE).
+  - Its source code is freely available, and anyone can use, modify, and distribute it without paying any licensing fees.
+  - OpenJDK is maintained by the OpenJDK community, which includes individuals and organizations like Red Hat, Amazon, and IBM.
+  - Although Oracle contributes to OpenJDK, it does not provide official long-term support (LTS) for OpenJDK releases.
+  - OpenJDK builds are typically provided without any commercial support, though some vendors (like Red Hat) offer support as part of their product offerings.
+
+- **Oracle JDK**:
+  - Oracle JDK is a proprietary implementation of the Java SE, developed and maintained by Oracle Corporation.
+  - While the source code for Oracle JDK is available under the OpenJDK project, the binary distribution is proprietary and requires a commercial license for use in production environments.
+  - Oracle JDK provides official long-term support (LTS) for its releases, ensuring that security patches and bug fixes are available for an extended period.
+  - Oracle JDK includes additional features and components not found in OpenJDK, such as the Java Flight Recorder and Java Mission Control, which are primarily aimed at enterprise users and performance tuning.
+
+In summary, the primary differences between OpenJDK and Oracle JDK lie in their licensing, support, and additional features. OpenJDK is open-source and free to use, while Oracle JDK is proprietary and requires a commercial license for production use. Oracle JDK offers official long-term support and additional enterprise-focused features, whereas OpenJDK relies on community support and does not include these extra components.
+
+**Hands-on Activity:**
+
+1. **Setting up a Java development environment**:
+   - Download and install both OpenJDK and Oracle JDK on your local machine.
+   - Verify the installation by checking the Java version using the `java -version` command for each installation.
+
+2. **Running Java applications**:
+   - Write a simple "Hello, World!" Java program and compile it using both JDKs.
+   - Run the compiled Java class file using each JDK to ensure compatibility.
+
+3. **Generating heap and thread dumps**:
+   - Use the `j

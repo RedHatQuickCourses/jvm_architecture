@@ -1,0 +1,7 @@
+* xref:garbage-collection.adoc[]
+** xref:overview-of-garbage-collection.adoc[]
+** xref:different-gc-collectors.adoc[]
+** xref:serial-gc.adoc[]
+** xref:parallel-gc.adoc[]
+** xref:cms-concurrent-mark-sweep-gc.adoc[]
+** xref:g1-gc.adoc[]

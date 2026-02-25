@@ -1,6 +1,6 @@
 site:
-  title: FIXME Course Title
-  start_page: REPLACEREPONAME::index.adoc
+  title:  JVM Architecture
+  start_page: jvm_architecture::index.adoc
 
 content:
   sources:

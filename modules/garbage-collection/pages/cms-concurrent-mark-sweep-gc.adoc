@@ -1,0 +1,37 @@
+#  CMS (Concurrent Mark Sweep) GC
+
+== CMS (Concurrent Mark Sweep) GC
+
+- **Overview**
+
+  The CMS (Concurrent Mark Sweep) Garbage Collector is a server-style collector, designed for applications that require low pause times and have the application thread running during the collection. It was introduced in Java 1.4 and is considered an improvement over the Serial and Parallel GC collectors for multiprocessor machines.
+
+- **Working Principle**
+
+  CMS GC operates in two phases: Marking and Sweeping.
+
+  - **Marking Phase**
+
+    During the marking phase, the CMS collector traverses the graph of objects starting from the roots (application threads, local variables, etc.) and marks all reachable objects. This phase is concurrent with the application threads, meaning it runs alongside the application, minimizing pause times.
+
+  - **Sweeping Phase**
+
+    In the sweeping phase, the CMS collector attempts to reclaim memory from the unreachables (objects not marked during the marking phase). This phase is also concurrent with the application threads. The collector tries to move live objects to the beginning of the old generation heap, creating contiguous free space.
+
+- **Advantages**
+
+  - **Low Pause Times**: The concurrent nature of CMS GC allows it to minimize pause times, making it suitable for real-time and interactive applications.
+  - **High Throughput**: CMS GC can achieve high throughput, as it avoids the stop-the-world pauses experienced by other collectors.
+
+- **Disadvantages**
+
+  - **Fragmentation**: CMS GC can lead to fragmentation in the old generation heap, as it moves live objects to the beginning of the heap. This can eventually lead to OutOfMemoryErrors.
+  - **Unpredictable Pause Times**: Although CMS GC aims to minimize pause times, they can still be unpredictable due to the concurrent nature of the collection.
+  - **Not Suitable for Multiprocessor Machines**: CMS GC is not recommended for multiprocessor machines, as it does not fully utilize available processors.
+
+- **Configuration**
+
+  To use CMS GC, you can specify the `-XX:+UseConcMarkSweepGC` JVM flag. However, it's essential to tune the CMS GC settings according to your application's requirements to avoid fragmentation and unpredictable pause times. Some important flags include:
+
+  - `-XX:NewRatio`: Sets the ratio of the young generation to the old generation.
+  - `-XX:CMSInitiatingOccupancyFraction

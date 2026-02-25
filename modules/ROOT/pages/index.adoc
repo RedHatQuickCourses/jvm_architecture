@@ -1,22 +1,29 @@
-= An Example Quick Course
+=  JVM Architecture
 :navtitle: Home
 
 == Introduction
 
-Course Title: Course title FIXME
+Course Title:  JVM Architecture
 
 Description:
 Course description FIXME
 
 Duration: FIXME hours
 
-== Objectives
+== Topics covered in this course
 
-On completing this course, you should be able to:
 
-* Observable, measurable objective...
-* Observable, measurable objective...
-* Observable, measurable objective...
+*  JRE, JVM & JDK Overview
+
+*  JVM Internals
+
+*  Garbage Collection
+
+*  JVM Diagnostics
+
+*  Hands-on Lab
+
+
 
 == Prerequisites
 

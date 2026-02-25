@@ -1,0 +1,33 @@
+#  Permanent generation (meta space)
+
+== Permanent Generation (Meta Space)
+
+The permanent generation (meta space) is a part of the non-heap memory in the JVM. It stores class-related data, such as method and field data, code for methods and constructors, and internal strings. This space is also known as the method area in some JVM implementations.
+
+In Java 8 and later versions, the permanent generation has been replaced with the term meta space. The primary function of this space remains the same – to store metadata required by the JVM to describe classes.
+
+### Key Components of Meta Space
+
+1. **Class Structures**: Information about the classes, including their names, superclasses, interfaces, fields, and methods.
+
+2. **Runtime Constant Pools**: Data structures that hold constants for classes, methods, and fields.
+
+3. **Method and Constructor Code**: The actual bytecode instructions for methods and constructors.
+
+4. **Internal Strings**: Strings that are used internally by the JVM, such as error messages and class file names.
+
+### Configuration and Sizing
+
+The size of the meta space can be configured using JVM flags. In earlier Java versions (up to Java 7), the permanent generation size was specified using the `-XX:PermSize` and `-XX:MaxPermSize` flags.
+
+From Java 8 onwards, the meta space is managed similarly to the heap, using the `-XX:MetaspaceSize` and `-XX:MaxMetaspaceSize` flags. The meta space can grow up to the maximum size specified by `-XX:MaxMetaspaceSize`, and its initial size is set by `-XX:MetaspaceSize`.
+
+It's important to note that, unlike the heap, the meta space does not require explicit garbage collection. Instead, it uses a background thread to compact and resize itself as needed.
+
+### Analyzing Meta Space in Dumps
+
+When analyzing heap dumps or thread dumps, understanding the meta space is crucial for identifying potential memory leaks or issues related to class loading. Tools like VisualVM, jmap, and jstack can be used to inspect the meta space and diagnose problems.
+
+#### Heap Dump Analysis
+
+Heap dump files contain information about objects in the heap, including those in the meta space. Analyzing heap dumps can help identify classes that are consuming excessive space in the meta space, which might indicate a memory leak or inefficient

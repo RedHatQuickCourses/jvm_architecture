@@ -1,0 +1,25 @@
+#  JRE, JVM & JDK Overview
+
+```
+JRE, JVM & JDK Overview
+========================
+
+JRE (Java Runtime Environment)
+------------------------------
+
+* Components: JRE contains all the libraries required to execute a Java program.
+* Purpose: Provides a runtime environment for Java applications.
+
+JVM (Java Virtual Machine)
+-------------------------
+
+* Role: Executes Java applications by converting bytecode into machine code.
+* OpenJDK vs Oracle JDK: Both are JVM implementations, with OpenJDK being community-driven and Oracle JDK having additional features and support.
+
+Key Points
+----------
+
+* JDK (Java Development Kit) is the outermost layer, containing JRE and development tools.
+* JRE is a part of JDK, providing the library set for executing Java programs.
+* Multiple vendors, such as Oracle and Red Hat (OpenJDK), offer JDK implementations with varying features.
+```

@@ -1,10 +1,18 @@
-name: REPLACEREPONAME
-title: FIXME Course Title
-version: 1
+name: jvm_architecture
+title:  JVM Architecture
+version: 1.0.0
 nav:
 - modules/ROOT/nav.adoc
 - modules/LABENV/nav.adoc
-- modules/chapter1/nav.adoc
-- modules/chapter2/nav.adoc
-- modules/chapter3/nav.adoc
+
+- modules/jre-jvm-jdk-overview/nav.adoc
+
+- modules/jvm-internals/nav.adoc
+
+- modules/garbage-collection/nav.adoc
+
+- modules/jvm-diagnostics/nav.adoc
+
+- modules/hands-on-lab/nav.adoc
+
 - modules/appendix/nav.adoc

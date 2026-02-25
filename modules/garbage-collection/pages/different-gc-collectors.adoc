@@ -1,0 +1,23 @@
+#  Different GC collectors:
+
+== Different GC Collectors
+
+The Java Virtual Machine (JVM) employs various Garbage Collection (GC) algorithms to manage memory. These collectors differ in their approach to reclaiming memory from objects that are no longer in use. Here, we will discuss some of the commonly used GC collectors:
+
+- **Serial GC**: This is the simplest and most basic GC algorithm. It uses a single thread to perform the garbage collection process on the entire heap. It is suitable for single-threaded applications with small heaps (less than 1 GB). Serial GC is also known as the throughput collector because it prioritizes application performance over GC pause times.
+
+- **Parallel GC**: This collector uses multiple threads to perform garbage collection in parallel, making it more efficient for multi-threaded applications and larger heaps. It divides the heap into multiple regions and assigns each region to a separate thread. This parallel processing significantly reduces the time taken for garbage collection.
+
+- **CMS (Concurrent Mark Sweep) GC**: The CMS collector aims to minimize the pause times caused by garbage collection. It performs most of the garbage collection work concurrently with the application threads, allowing the application to continue running with minimal interruption. However, it has some limitations, such as fragmentation and inability to handle very large heaps efficiently.
+
+- **G1 GC (Garbage-First)**: The G1 GC is designed to provide more predictable pause times and better throughput compared to the other collectors. It divides the heap into a set of equal-sized regions and performs garbage collection in parallel, focusing on regions with the most garbage. G1 GC is particularly suitable for multiprocessor machines with large memories.
+
+Each of these collectors has its strengths and weaknesses, and the choice of a collector depends on the specific requirements of the application, such as the size of the heap, the need for low pause times, and the application's throughput requirements.
+
+**Hands-on Activity:**
+
+1. Set up a Java development environment.
+2. Run a Java application with different GC collectors enabled using JVM flags. For example:
+   - Serial GC: `java -Xmx256m -XX:+UseSerialGC MyApp`
+   - Parallel GC: `java -Xmx256m -XX:+UseParallelGC MyApp`
+   - CMS GC: `java -Xmx256m -XX:+UseConc

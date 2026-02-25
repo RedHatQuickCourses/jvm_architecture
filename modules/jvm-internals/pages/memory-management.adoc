@@ -1,0 +1,37 @@
+#  Memory Management:
+
+== Memory Management
+
+Memory management in the Java Virtual Machine (JVM) is a crucial aspect of its operation, ensuring efficient allocation and deallocation of memory for Java applications. This section will cover the key components of memory management in the JVM, including heap space, native memory, and the permanent generation (now referred to as the metaspace).
+
+- **Heap Space**
+
+  The heap is the runtime data area for object instantiation and arrays in Java. It is divided into different sections, including the young generation (Eden space, Survivor 0, and Survivor 1) and the old generation (also known as the tenured generation).
+
+  - **Young Generation**
+
+    The young generation is where most newly created objects reside. It consists of the Eden space and two Survivor spaces (Survivor 0 and Survivor 1). When an object is first created, it is placed in the Eden space. As the object survives garbage collection cycles, it is moved to one of the Survivor spaces.
+
+  - **Old Generation (Tenured Generation)**
+
+    Objects that survive multiple garbage collection cycles in the young generation are eventually moved to the old generation. The old generation is larger than the young generation and is where long-lived objects are stored.
+
+  - **Permanent Generation (Metaspace)**
+
+    In Java 8 and later, the permanent generation has been replaced by the metaspace, which stores class-related data such as method and field data. The metaspace is loaded at JVM startup and grows as needed.
+
+- **Native Memory**
+
+  Native memory refers to the memory allocated outside the JVM heap, used for internal JVM data structures and native handles. Native memory is not managed by the JVM's garbage collector and must be monitored separately to avoid memory leaks.
+
+- **Garbage Collection**
+
+  Garbage collection is the process by which the JVM automatically reclaims memory occupied by objects that are no longer in use. The JVM provides several garbage collection algorithms, each with its own trade-offs in terms of pause times and throughput. Some of the commonly used garbage collectors are:
+
+  - **Serial GC**
+
+    A single-threaded collector suitable for single-processor machines. It stops the application entirely during a collection cycle.
+
+  - **Parallel GC**
+
+    A multi-threaded collector that uses multiple threads for garbage collection, making it more efficient on multi-processor machines. It also stops the application

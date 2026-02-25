@@ -1,0 +1,31 @@
+#  Native memory
+
+== Native Memory
+
+Native memory, also known as non-heap memory, is a portion of the total memory allocated to the operating system that is used by the Java Virtual Machine (JVM) for purposes other than storing Java objects. This memory is distinct from the heap space, which is dedicated to storing instances of Java objects during the execution of a Java program.
+
+### Components of Native Memory
+
+1. **Class Area**: This region stores metadata related to Java classes and methods. It includes information such as method and field data, which are essential for the JVM to execute Java code.
+
+2. **Code Cache (Native Method Stack)**: This area is used to store compiled native methods. Native methods are functions written in languages other than Java, such as C or C++, and are called by Java code. The code cache also stores the compiled versions of Java methods to optimize their execution.
+
+3. **Internal Structures**: The JVM requires various internal data structures to function correctly. These structures, which are not directly accessible to Java applications, are stored in the native memory. Examples include JVM code, profiler agents, and other required data.
+
+4. **Other**: This category encompasses miscellaneous data used by the JVM, such as thread-specific data and internal data structures for garbage collection.
+
+### Importance of Native Memory
+
+Understanding native memory is crucial for JVM diagnostics, as issues related to native memory can lead to performance degradation or even application crashes. Monitoring and managing native memory is essential to ensure the stability and efficiency of Java applications.
+
+### Hands-on Lab: Analyzing Native Memory
+
+To gain practical experience with native memory, consider the following lab activity:
+
+1. **Setting up a Java Development Environment**: Install and configure a Java development environment, such as JDK (Java Development Kit) and an Integrated Development Environment (IDE) like IntelliJ IDEA or Eclipse.
+
+2. **Running Java Applications**: Develop and run simple Java applications to understand their memory usage patterns. Use tools like VisualVM or Java Mission Control to monitor both heap and non-heap memory consumption.
+
+3. **Generating Native Memory Dumps**: Learn to generate native memory dumps using tools like `jmap` or `jcmd`. These dumps provide insights into the native memory usage of a running Java process.
+
+4. **Analyzing Native Memory Dumps**: Use tools like `jmap`, `jstack`, or specialized

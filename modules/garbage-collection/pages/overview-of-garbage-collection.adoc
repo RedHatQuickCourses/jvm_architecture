@@ -1,0 +1,29 @@
+#  Overview of garbage collection
+
+== Overview of Garbage Collection
+
+Garbage collection is a crucial aspect of the Java Virtual Machine (JVM) that automatically manages memory by identifying and removing objects that are no longer in use or referenced by the application. This process ensures efficient memory usage and prevents memory leaks.
+
+There are two primary types of garbage collection in the JVM: minor GC (also known as young generation GC) and major GC (also known as old generation GC or full GC).
+
+**Minor GC**
+
+Minor garbage collection focuses on the young generation, which is further divided into the Eden space and two survivor spaces. When an object is created, it resides in the Eden space. As objects survive multiple minor GC cycles, they are moved to one of the survivor spaces. Objects that continue to survive multiple minor GC cycles are eventually promoted to the old generation (tenured generation).
+
+Minor GC is designed to be efficient and frequent, as it primarily deals with short-lived objects.
+
+**Major GC**
+
+Major garbage collection targets the old generation (tenured generation) where long-lived objects reside. Major GC is required when the old generation becomes full, and it involves more overhead compared to minor GC due to the larger memory area it needs to manage. Major GC can be further categorized into different algorithms, such as Serial GC, Parallel GC, CMS (Concurrent Mark Sweep) GC, and G1 GC, each with its own characteristics and use cases.
+
+**Garbage Collection Algorithms**
+
+1. Serial GC: A single-threaded garbage collector that stops the application threads during the collection process. It is suitable for smaller applications with a single processor core.
+
+2. Parallel GC: A multi-threaded garbage collector that utilizes multiple processor cores to perform garbage collection in parallel, improving performance for larger applications.
+
+3. CMS (Concurrent Mark Sweep) GC: A low-pause, multi-threaded garbage collector that aims to minimize the pause times during the collection process. It achieves this by performing most of the collection work concurrently with the application threads.
+
+4. G1 GC: A garbage-first collector that divides the heap into smaller regions and focuses on collecting the regions with the most garbage first. It aims to provide a more predictable pause time compared to other collectors.
+
+In summary, garbage collection is a vital component of the JVM that helps manage memory
