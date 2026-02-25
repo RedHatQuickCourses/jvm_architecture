@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Class Loader :: JVM Architecture</title>
+    <link rel="prev" href="permanent-generation-meta-space.html">
+    <link rel="next" href="../garbage-collection/garbage-collection.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">JVM Architecture</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">JVM Architecture</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-jvm-jdk-overview.html">JRE, JVM &amp; JDK Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-java-runtime-environment.html">JRE (Java Runtime Environment):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/components-and-purpose.html">Components and purpose</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jvm-java-virtual-machine.html">JVM (Java Virtual Machine):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/role-in-executing-java-applications.html">Role in executing Java applications</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/openjdk-vs-oracle-jdk.html">OpenJDK vs Oracle JDK</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-internals.html">JVM Internals</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="memory-management.html">Memory Management:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="heap-space.html">Heap space</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="native-memory.html">Native memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permanent-generation-meta-space.html">Permanent generation (meta space)</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="class-loader.html">Class Loader</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../garbage-collection/garbage-collection.html">Garbage Collection</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/overview-of-garbage-collection.html">Overview of garbage collection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/different-gc-collectors.html">Different GC collectors:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/serial-gc.html">Serial GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/parallel-gc.html">Parallel GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/cms-concurrent-mark-sweep-gc.html">CMS (Concurrent Mark Sweep) GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/g1-gc.html">G1 GC</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-diagnostics/jvm-diagnostics.html">JVM Diagnostics</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/heap-dump.html">Heap Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/understanding-heap-dump-files.html">Understanding heap dump files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/analyzing-heap-dumps-for-memory-leaks.html">Analyzing heap dumps for memory leaks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/thread-dump.html">Thread Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/generating-and-interpreting-thread-dumps.html">Generating and interpreting thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/identifying-thread-issues.html">Identifying thread issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JVM Architecture</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">JVM Architecture</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">JVM Architecture</a></li>
+    <li><a href="jvm-internals.html">JVM Internals</a></li>
+    <li><a href="class-loader.html">Class Loader</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Class Loader</h1>
+<div class="sect1">
+<h2 id="_class_loader"><a class="anchor" href="#_class_loader"></a>Class Loader</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Class loaders are a crucial part of the Java Virtual Machine (JVM) architecture, responsible for loading class files during the execution of a Java program. They are a subsystem of the Java Language Specification (JLS) and play a significant role in the Java runtime environment (JRE).</p>
+</div>
+<div class="sect2">
+<h3 id="_class_loader_hierarchy"><a class="anchor" href="#_class_loader_hierarchy"></a>Class Loader Hierarchy</h3>
+<div class="paragraph">
+<p>There are three primary class loaders in the JVM:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Bootstrap Class Loader</strong>: This is the most fundamental class loader, responsible for loading core Java classes located in the <code>rt.jar</code> file. It is part of the JVM implementation and is always present.</p>
+</li>
+<li>
+<p><strong>Extension Class Loader</strong>: This class loader is responsible for loading classes from the <code>jre/lib/ext</code> directory and the <code>JAVA_HOME/lib/ext</code> directory. It is used to load classes that extend the Java platform, such as those provided by vendors.</p>
+</li>
+<li>
+<p><strong>System/Application Class Loader</strong>: This is the class loader used by the application to load classes from the classpath, including the user&#8217;s application code. It delegates the loading of classes to its parent class loader (usually the extension class loader) before attempting to load the class itself.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_class_loader_delegation_model"><a class="anchor" href="#_class_loader_delegation_model"></a>Class Loader Delegation Model</h3>
+<div class="paragraph">
+<p>The JVM follows a delegation model for class loading, which ensures that the class loader first delegates the loading of classes to its parent before attempting to load them itself. This model helps maintain a clear separation of concerns and prevents class loading conflicts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_class_loader_and_memory_management"><a class="anchor" href="#_class_loader_and_memory_management"></a>Class Loader and Memory Management</h3>
+<div class="paragraph">
+<p>The class loader plays a role in memory management, particularly in the management of the <strong>Permanent Generation (Meta Space)</strong>. The meta space stores class-related data, such as method data and fields, and its lifetime matches that of the class loader. This means that as long as the class loader is alive, the meta data remains alive in the meta space and cannot be freed up.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hands_on_lab_class_loader"><a class="anchor" href="#_hands_on_lab_class_loader"></a>Hands-on Lab: Class Loader</h3>
+<div class="paragraph">
+<p>To gain a better understanding of class loaders, let&#8217;s consider a hands-on lab. In this lab, you will:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up a Java development environment.</p>
+</li>
+<li>
+<p>Examine the class loading process by creating custom class loaders.</p>
+</li>
+<li>
+<p>Observe how the delegation model works in practice.</p>
+</li>
+<li>
+<p>Investigate class loading issues and how to troubleshoot them.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This lab will provide practical experience in working with class loaders and understanding their role in the JVM</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="permanent-generation-meta-space.html">Permanent generation (meta space)</a></span>
+  <span class="next"><a href="../garbage-collection/garbage-collection.html">Garbage Collection</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Memory Management: :: JVM Architecture</title>
+    <link rel="prev" href="jvm-internals.html">
+    <link rel="next" href="heap-space.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">JVM Architecture</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">JVM Architecture</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-jvm-jdk-overview.html">JRE, JVM &amp; JDK Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-java-runtime-environment.html">JRE (Java Runtime Environment):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/components-and-purpose.html">Components and purpose</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jvm-java-virtual-machine.html">JVM (Java Virtual Machine):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/role-in-executing-java-applications.html">Role in executing Java applications</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/openjdk-vs-oracle-jdk.html">OpenJDK vs Oracle JDK</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-internals.html">JVM Internals</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="memory-management.html">Memory Management:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="heap-space.html">Heap space</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="native-memory.html">Native memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="permanent-generation-meta-space.html">Permanent generation (meta space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="class-loader.html">Class Loader</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../garbage-collection/garbage-collection.html">Garbage Collection</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/overview-of-garbage-collection.html">Overview of garbage collection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/different-gc-collectors.html">Different GC collectors:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/serial-gc.html">Serial GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/parallel-gc.html">Parallel GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/cms-concurrent-mark-sweep-gc.html">CMS (Concurrent Mark Sweep) GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/g1-gc.html">G1 GC</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-diagnostics/jvm-diagnostics.html">JVM Diagnostics</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/heap-dump.html">Heap Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/understanding-heap-dump-files.html">Understanding heap dump files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/analyzing-heap-dumps-for-memory-leaks.html">Analyzing heap dumps for memory leaks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/thread-dump.html">Thread Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/generating-and-interpreting-thread-dumps.html">Generating and interpreting thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-diagnostics/identifying-thread-issues.html">Identifying thread issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JVM Architecture</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">JVM Architecture</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">JVM Architecture</a></li>
+    <li><a href="jvm-internals.html">JVM Internals</a></li>
+    <li><a href="memory-management.html">Memory Management:</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Memory Management:</h1>
+<div class="sect1">
+<h2 id="_memory_management"><a class="anchor" href="#_memory_management"></a>Memory Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Memory management in the Java Virtual Machine (JVM) is a crucial aspect of its operation, ensuring efficient allocation and deallocation of memory for Java applications. This section will cover the key components of memory management in the JVM, including heap space, native memory, and the permanent generation (now referred to as the metaspace).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Heap Space</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>The heap is the runtime data area for object instantiation and arrays in Java. It is divided into different sections, including the young generation (Eden space, Survivor 0, and Survivor 1) and the old generation (also known as the tenured generation).</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Young Generation</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>The young generation is where most newly created objects reside. It consists of the Eden space and two Survivor spaces (Survivor 0 and Survivor 1). When an object is first created, it is placed in the Eden space. As the object survives garbage collection cycles, it is moved to one of the Survivor spaces.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Old Generation (Tenured Generation)</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>Objects that survive multiple garbage collection cycles in the young generation are eventually moved to the old generation. The old generation is larger than the young generation and is where long-lived objects are stored.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Permanent Generation (Metaspace)</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>In Java 8 and later, the permanent generation has been replaced by the metaspace, which stores class-related data such as method and field data. The metaspace is loaded at JVM startup and grows as needed.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Native Memory</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>Native memory refers to the memory allocated outside the JVM heap, used for internal JVM data structures and native handles. Native memory is not managed by the JVM's garbage collector and must be monitored separately to avoid memory leaks.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Garbage Collection</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>Garbage collection is the process by which the JVM automatically reclaims memory occupied by objects that are no longer in use. The JVM provides several garbage collection algorithms, each with its own trade-offs in terms of pause times and throughput. Some of the commonly used garbage collectors are:</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Serial GC</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>A single-threaded collector suitable for single-processor machines. It stops the application entirely during a collection cycle.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Parallel GC</strong></p>
+<div class="literalblock">
+<div class="content">
+<pre>A multi-threaded collector that uses multiple threads for garbage collection, making it more efficient on multi-processor machines. It also stops the application</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-internals.html">JVM Internals</a></span>
+  <span class="next"><a href="heap-space.html">Heap space</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Thread Dump: :: JVM Architecture</title>
+    <link rel="prev" href="analyzing-heap-dumps-for-memory-leaks.html">
+    <link rel="next" href="generating-and-interpreting-thread-dumps.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">JVM Architecture</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">JVM Architecture</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-jvm-jdk-overview.html">JRE, JVM &amp; JDK Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jre-java-runtime-environment.html">JRE (Java Runtime Environment):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/components-and-purpose.html">Components and purpose</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/jvm-java-virtual-machine.html">JVM (Java Virtual Machine):</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/role-in-executing-java-applications.html">Role in executing Java applications</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jre-jvm-jdk-overview/openjdk-vs-oracle-jdk.html">OpenJDK vs Oracle JDK</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-internals/jvm-internals.html">JVM Internals</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-internals/memory-management.html">Memory Management:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-internals/heap-space.html">Heap space</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-internals/native-memory.html">Native memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-internals/permanent-generation-meta-space.html">Permanent generation (meta space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-internals/class-loader.html">Class Loader</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../garbage-collection/garbage-collection.html">Garbage Collection</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/overview-of-garbage-collection.html">Overview of garbage collection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/different-gc-collectors.html">Different GC collectors:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/serial-gc.html">Serial GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/parallel-gc.html">Parallel GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/cms-concurrent-mark-sweep-gc.html">CMS (Concurrent Mark Sweep) GC</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../garbage-collection/g1-gc.html">G1 GC</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-diagnostics.html">JVM Diagnostics</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="heap-dump.html">Heap Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="understanding-heap-dump-files.html">Understanding heap dump files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="analyzing-heap-dumps-for-memory-leaks.html">Analyzing heap dumps for memory leaks</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="thread-dump.html">Thread Dump:</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="generating-and-interpreting-thread-dumps.html">Generating and interpreting thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="identifying-thread-issues.html">Identifying thread issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">JVM Architecture</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">JVM Architecture</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">JVM Architecture</a></li>
+    <li><a href="jvm-diagnostics.html">JVM Diagnostics</a></li>
+    <li><a href="thread-dump.html">Thread Dump:</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Thread Dump:</h1>
+<div class="sect1">
+<h2 id="_thread_dump"><a class="anchor" href="#_thread_dump"></a>Thread Dump</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A thread dump is a snapshot of the state of all threads in a Java Virtual Machine (JVM) at a particular point in time. It provides detailed information about each thread, including its state (running, blocked, or waiting), stack trace, and locked monitors. Thread dumps are useful for diagnosing issues related to thread contention, deadlocks, and excessive thread usage.</p>
+</div>
+<div class="sect2">
+<h3 id="_generating_thread_dumps"><a class="anchor" href="#_generating_thread_dumps"></a>Generating Thread Dumps</h3>
+<div class="paragraph">
+<p>There are several ways to generate a thread dump in a running Java application:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Using <code>jstack</code></strong>: This is a command-line utility that comes with the JDK. To generate a thread dump, run the following command:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```
+jstack &lt;pid&gt;
+```</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Replace `&lt;pid&gt;` with the process ID of the Java application.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Using <code>kill -3 &lt;pid&gt;</code></strong>: This method sends a SIGQUOT signal to the Java process, causing it to generate a thread dump. Replace <code>&lt;pid&gt;</code> with the process ID of the Java application.</p>
+</li>
+<li>
+<p><strong>Using Java Management Extensions (JMX)</strong>: You can use JMX to connect to a running JVM and request a thread dump. This method is more suitable for applications managed by a JMX-compliant server.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interpreting_thread_dumps"><a class="anchor" href="#_interpreting_thread_dumps"></a>Interpreting Thread Dumps</h3>
+<div class="paragraph">
+<p>Once you have a thread dump, you can analyze it to identify issues. Here are some key aspects to look for:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Thread States</strong>: Threads can be in one of the following states:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>RUNNABLE: The thread is either running or waiting to run.</p>
+</li>
+<li>
+<p>BLOCKED: The thread is waiting for a monitor lock.</p>
+</li>
+<li>
+<p>WAITING: The thread is waiting for another thread to perform an action.</p>
+</li>
+<li>
+<p>TIMED_WAITING: The thread is waiting for an object to be available within a specified time.</p>
+</li>
+<li>
+<p>TERMINATED: The thread has completed execution.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Stack Traces</strong>: The stack trace of each thread shows the sequence of method calls that led the thread to its current state. By examining stack traces, you can identify which methods are causing threads to block or wait.</p>
+</li>
+<li>
+<p><strong>Locked Monitors</strong>: Threads can hold locks on objects, preventing other threads from accessing those objects. If a thread is blocked while holding a lock, it may indicate a deadlock.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_identifying_thread_issues"><a class="anchor" href="#_identifying_thread_issues"></a>Identifying Thread Issues</h3>
+<div class="paragraph">
+<p>Using thread dumps, you can identify and resolve various</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="analyzing-heap-dumps-for-memory-leaks.html">Analyzing heap dumps for memory leaks</a></span>
+  <span class="next"><a href="generating-and-interpreting-thread-dumps.html">Generating and interpreting thread dumps</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
