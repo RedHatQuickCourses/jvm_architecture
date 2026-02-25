@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM Memory Allocation (Heap Space) :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="jvm-configuration.html">
+    <link rel="next" href="jvm-configuration-in-standalone-mode.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-architecture/jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-configuration.html">JVM Configuration</a></li>
+    <li><a href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JVM Memory Allocation (Heap Space)</h1>
+<h1 id="_jvm_memory_allocation_heap_space" class="sect0"><a class="anchor" href="#_jvm_memory_allocation_heap_space"></a>JVM Memory Allocation (Heap Space)</h1>
+<div class="paragraph">
+<p>JVM memory allocation is a critical aspect of managing Java application performance and stability. Understanding how the Java Virtual Machine (JVM) allocates and manages memory, particularly the heap space, is fundamental for any Java developer or administrator.</p>
+</div>
+<div class="sect2">
+<h3 id="_what_is_heap_memory"><a class="anchor" href="#_what_is_heap_memory"></a>What is Heap Memory?</h3>
+<div class="paragraph">
+<p>The Heap is a runtime data area from which memory for all Java class instances (objects) and arrays is allocated. It is a shared memory region that is managed by the JVM and is created when the JVM starts. The heap&#8217;s size can increase or decrease dynamically during an application&#8217;s execution, primarily managed by the Garbage Collector.</p>
+</div>
+<div class="paragraph">
+<p>The JVM allocates a portion of the host system&#8217;s physical RAM for its operation. A significant part of this allocated RAM is dedicated to the heap space. For example, if a system has 10 GB of RAM, and 2 GB is designated as the JVM&#8217;s maximum heap space, the JVM will, at most, consume 2 GB of RAM for object storage.</p>
+</div>
+<div class="paragraph">
+<p>If a Java application requires more memory than the allocated heap space, and the entire heap is consumed, the JVM will typically throw an <code>java.lang.OutOfMemoryError</code> exception, leading to application failure.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The heap memory is distinct from other JVM memory areas like the Metaspace (part of Non-Heap memory), which stores class metadata, and Native Memory, used by the JVM itself for internal operations. This section focuses exclusively on the heap.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the relationship between System RAM and JVM Heap, showing the heap as a subset of the total allocated RAM for the JVM.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_heap_memory_structure_generations"><a class="anchor" href="#_heap_memory_structure_generations"></a>Heap Memory Structure (Generations)</h3>
+<div class="paragraph">
+<p>To efficiently manage objects and perform garbage collection, the JVM&#8217;s heap memory is logically divided into different sections, often referred to as "generations." This generational approach is based on the weak generational hypothesis, which states that most objects are short-lived.</p>
+</div>
+<div class="paragraph">
+<p>The heap is primarily divided into two main generations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Young Generation (Young Gen):</strong> This is where all newly created objects are initially allocated. The Young Generation itself is further subdivided into three areas:</p>
+</li>
+<li>
+<p><strong>Eden Space:</strong> The primary area for new object allocation. Most objects start their life here.</p>
+</li>
+<li>
+<p><strong>Survivor Space 0 (S0):</strong> One of two survivor spaces. Objects that survive a garbage collection cycle in Eden are moved here.</p>
+</li>
+<li>
+<p><strong>Survivor Space 1 (S1):</strong> The other survivor space. Objects are moved between S0 and S1 during subsequent garbage collection cycles, if they continue to survive.</p>
+</li>
+<li>
+<p><strong>Old Generation (Old Gen) / Tenured Generation:</strong> Objects that survive multiple garbage collection cycles in the Young Generation (i.e., they are long-lived) are "promoted" or "tenured" to the Old Generation. Objects in the Old Generation are subject to less frequent but typically more extensive garbage collection cycles.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the JVM Heap&#8217;s generational structure, showing Eden, S0, S1, and Old Generation, along with arrows indicating object promotion.</p>
+</div>
+<div class="paragraph">
+<p>The process of objects moving between these generations is managed by the JVM&#8217;s Garbage Collector. When the Young Generation fills up, a "Minor GC" (or Young GC) occurs. Objects that are still reachable are moved to a survivor space. After several Minor GCs, surviving objects are moved to the Old Generation. When the Old Generation fills up, a "Major GC" (or Full GC) occurs, which typically involves stopping all application threads (a "stop-the-world" event) to reclaim memory, making it a more impactful operation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_heap_space"><a class="anchor" href="#_configuring_heap_space"></a>Configuring Heap Space</h3>
+<div class="paragraph">
+<p>The size of the heap memory allocated to a JVM is one of the most crucial configuration parameters for Java applications. It directly impacts performance, stability, and the likelihood of <code>OutOfMemoryError</code> issues. Heap size is typically configured using JVM command-line arguments.</p>
+</div>
+<div class="paragraph">
+<p>The two primary parameters for configuring heap space are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-Xms&lt;size&gt;</code> (Initial Heap Size):</p>
+</li>
+<li>
+<p>This flag sets the <strong>initial</strong> heap memory allocated to the JVM when it starts.</p>
+</li>
+<li>
+<p>The JVM will start with at least this amount of memory.</p>
+</li>
+<li>
+<p>Setting <code>-Xms</code> and <code>-Xmx</code> to the same value can prevent the heap from resizing during runtime, which can reduce garbage collection overhead and potential performance pauses, especially for applications with stable memory footprints.</p>
+</li>
+<li>
+<p><code>-Xmx&lt;size&gt;</code> (Maximum Heap Size):</p>
+</li>
+<li>
+<p>This flag sets the <strong>maximum</strong> heap memory that the JVM can use.</p>
+</li>
+<li>
+<p>The JVM will not exceed this value, even if the application requires more memory.</p>
+</li>
+<li>
+<p>Exceeding this limit will result in an <code>OutOfMemoryError</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Sizes can be specified in bytes (e.g., <code>-Xms2048m</code>), kilobytes (e.g., <code>-Xms2048k</code>), or gigabytes (e.g., <code>-Xms2g</code>). Using 'm' for megabytes or 'g' for gigabytes is common and recommended for readability.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+While other JVM arguments like <code>-XX:NewRatio</code> or <code>-XX:MaxMetaspaceSize</code> exist for finer-grained memory control, <code>-Xms</code> and <code>-Xmx</code> are the most fundamental for overall heap allocation.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_best_practices_for_heap_configuration"><a class="anchor" href="#_best_practices_for_heap_configuration"></a>Best Practices for Heap Configuration</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Monitor Application Usage:</strong> Start by monitoring your application&#8217;s actual memory usage under typical and peak loads to determine appropriate heap sizes. Tools like JConsole, VisualVM, or JFR (Java Flight Recorder) can help.</p>
+</li>
+<li>
+<p><strong>Balance Between <code>Xms</code> and <code>Xmx</code>:</strong></p>
+</li>
+<li>
+<p>For applications with predictable memory usage and to avoid resizing overhead, it&#8217;s often beneficial to set <code>-Xms</code> and <code>-Xmx</code> to the same value.</p>
+</li>
+<li>
+<p>For applications that have highly variable memory demands or run on systems with limited resources shared among many processes, setting <code>-Xms</code> lower than <code>-Xmx</code> allows the JVM to start small and grow as needed, potentially saving system resources.</p>
+</li>
+<li>
+<p><strong>Avoid Excessive Heap Sizes:</strong> A larger heap doesn&#8217;t always mean better performance. Very large heaps can lead to longer and more disruptive Full Garbage Collection pauses.</p>
+</li>
+<li>
+<p><strong>Consider Container Environments:</strong> In containerized environments (Docker, Kubernetes), be mindful of how container memory limits interact with JVM heap settings. Often, the JVM needs to be configured explicitly to be aware of the container&#8217;s memory limits.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_real_world_example_impact_of_heap_configuration"><a class="anchor" href="#_real_world_example_impact_of_heap_configuration"></a>Real-world Example: Impact of Heap Configuration</h4>
+<div class="paragraph">
+<p>Imagine a web application that processes large user requests, creating many temporary objects.
+If <code>-Xmx</code> is set too low (e.g., 256 MB), the application might frequently hit <code>OutOfMemoryError</code> during peak loads, crashing or becoming unresponsive.
+If <code>-Xms</code> is set too low while <code>-Xmx</code> is high, the JVM might spend time continuously expanding the heap, leading to minor performance hiccups.
+Conversely, if <code>-Xmx</code> is set excessively high (e.g., 64 GB on a 16 GB machine), the JVM might attempt to allocate more memory than available, leading to swapping (using disk as virtual memory), which severely degrades performance.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hands_on_lab_configuring_jvm_heap_size"><a class="anchor" href="#_hands_on_lab_configuring_jvm_heap_size"></a>Hands-on Lab: Configuring JVM Heap Size</h3>
+<div class="paragraph">
+<p>This lab will guide you through creating a simple Java application that consumes memory and then demonstrating how JVM heap configuration (<code>-Xms</code> and <code>-Xmx</code>) impacts its execution and stability.</p>
+</div>
+<div class="sect3">
+<h4 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>To understand the effect of <code>-Xms</code> and <code>-Xmx</code> parameters on a Java application&#8217;s memory consumption.</p>
+</li>
+<li>
+<p>To observe how insufficient heap memory leads to an <code>OutOfMemoryError</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A Java Development Kit (JDK) installed on your system. (Refer to the "Installing JDK using Subscription Manager" section if you need to install it.)</p>
+</li>
+<li>
+<p>A text editor or IDE to write Java code.</p>
+</li>
+<li>
+<p>A command-line terminal.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-step Instructions</h4>
+<div class="sect4">
+<h5 id="_step_1_create_a_sample_java_application"><a class="anchor" href="#_step_1_create_a_sample_java_application"></a>Step 1: Create a Sample Java Application</h5>
+<div class="paragraph">
+<p>Create a Java file named <code>MemoryConsumer.java</code> with the following content. This application attempts to create a large number of objects (strings) to consume heap memory.</p>
+</div>
+<div class="listingblock">
+<div class="title">MemoryConsumer.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class MemoryConsumer {
+    public static void main(String[] args) {
+        System.out.println("MemoryConsumer application started.");
+
+        java.util.List&lt;String&gt; list = new java.util.ArrayList&lt;&gt;();
+        long counter = 0;
+        try {
+            while (true) {
+                // Create a relatively large string object repeatedly
+                list.add(new String("This is a memory-intensive string that will consume heap space. Iteration: " + counter++));
+                if (counter % 100000 == 0) {
+                    System.out.println("Objects created: " + counter + ". Current list size: " + list.size());
+                }
+            }
+        } catch (OutOfMemoryError e) {
+            System.err.println("\nCaught OutOfMemoryError! Heap space exhausted.");
+            System.err.println("Total objects created before OOM: " + counter);
+            e.printStackTrace();
+        } finally {
+            System.out.println("Application finished.");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_step_2_compile_the_java_application"><a class="anchor" href="#_step_2_compile_the_java_application"></a>Step 2: Compile the Java Application</h5>
+<div class="paragraph">
+<p>Open your terminal, navigate to the directory where you saved <code>MemoryConsumer.java</code>, and compile it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">javac MemoryConsumer.java</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_step_3_run_with_default_jvm_settings"><a class="anchor" href="#_step_3_run_with_default_jvm_settings"></a>Step 3: Run with Default JVM Settings</h5>
+<div class="paragraph">
+<p>Execute the compiled application without any explicit heap size configuration. The JVM will use its default settings, which are typically ample for basic applications but might vary based on your system and JDK version.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java MemoryConsumer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Behavior: The application should run for a while, printing "Objects created:&#8230;&#8203;" messages, and eventually, it might encounter an <code>OutOfMemoryError</code> if it consumes enough memory, or it might run until interrupted depending on the default heap size.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_step_4_run_with_insufficient_heap_size_xmx"><a class="anchor" href="#_step_4_run_with_insufficient_heap_size_xmx"></a>Step 4: Run with Insufficient Heap Size (<code>-Xmx</code>)</h5>
+<div class="paragraph">
+<p>Now, let&#8217;s explicitly set a very small maximum heap size to force an <code>OutOfMemoryError</code> quickly. We&#8217;ll set it to 64 megabytes (<code>64m</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Xmx64m MemoryConsumer</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h5>
+<div class="paragraph">
+<p>You should quickly see output similar to this, indicating that the <code>OutOfMemoryError</code> was caught:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">MemoryConsumer application started.
+Objects created: 100000. Current list size: 100000
+Objects created: 200000. Current list size: 200000
+...
+Caught OutOfMemoryError! Heap space exhausted.
+Total objects created before OOM: [a number like 250000-300000]
+java.lang.OutOfMemoryError: Java heap space
+        at java.base/java.util.ArrayList.add(ArrayList.java:174)
+        at MemoryConsumer.main(MemoryConsumer.java:13)
+Application finished.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This clearly demonstrates that the JVM stopped the application&#8217;s execution because it ran out of the allocated 64 MB heap space.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_step_5_run_with_sufficient_heap_size_xms_and_xmx"><a class="anchor" href="#_step_5_run_with_sufficient_heap_size_xms_and_xmx"></a>Step 5: Run with Sufficient Heap Size (<code>-Xms</code> and <code>-Xmx</code>)</h5>
+<div class="paragraph">
+<p>Let&#8217;s try running the application with a more generous heap size, for instance, 512 megabytes. We&#8217;ll set both <code>-Xms</code> and <code>-Xmx</code> to the same value for consistency and to avoid heap resizing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Xms512m -Xmx512m MemoryConsumer</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_expected_outcome_2"><a class="anchor" href="#_expected_outcome_2"></a>Expected Outcome</h5>
+<div class="paragraph">
+<p>The application will run for a much longer time, consuming more memory and creating many more objects before potentially hitting an <code>OutOfMemoryError</code> or running indefinitely until manually stopped (Ctrl+C). The number of "Objects created" will be significantly higher than in the previous step.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">MemoryConsumer application started.
+Objects created: 100000. Current list size: 100000
+Objects created: 200000. Current list size: 200000
+...
+Objects created: 1000000. Current list size: 1000000
+... (continues for a long time or eventually hits OOM with a very high object count)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This shows that by increasing the heap size, the application has more memory available to run without immediately failing due to memory exhaustion.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h5>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Check Console Output:</strong> Verify that the console output matches the "Expected Outcome" for each step.</p>
+</li>
+<li>
+<p><strong><code>OutOfMemoryError</code> Message:</strong> Specifically look for <code>java.lang.OutOfMemoryError: Java heap space</code> when testing with insufficient memory.</p>
+</li>
+<li>
+<p><strong>Object Count:</strong> Compare the "Total objects created before OOM" value across different <code>-Xmx</code> settings; it should increase with larger heap sizes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Error: Could not create the Java Virtual Machine.</code></strong>: This error usually occurs if the JVM cannot allocate the requested heap size from the underlying operating system.</p>
+</li>
+<li>
+<p><strong>Troubleshooting:</strong> Check if the requested <code>-Xmx</code> value is too large for your system&#8217;s available RAM. Reduce the <code>-Xmx</code> value. Ensure you have enough physical RAM and swap space.</p>
+</li>
+<li>
+<p><strong><code>java.lang.OutOfMemoryError: Java heap space</code> (Unexpectedly):</strong> Even with seemingly sufficient <code>-Xmx</code>, you might get this error.</p>
+</li>
+<li>
+<p><strong>Troubleshooting:</strong> Your application might have a memory leak (objects are created but never become eligible for garbage collection), or the actual memory requirement is much higher than anticipated. Use profiling tools (e.g., JVisualVM, JConsole) to analyze heap dumps and track object allocation.</p>
+</li>
+<li>
+<p><strong>Incorrect Syntax for JVM Arguments:</strong> Forgetting <code>m</code> for megabytes or <code>g</code> for gigabytes, or incorrect casing.</p>
+</li>
+<li>
+<p><strong>Troubleshooting:</strong> Double-check the syntax: <code>-Xmx512m</code>, not <code>-Xmx512M</code> or <code>-Xmx 512m</code>.</p>
+</li>
+<li>
+<p><strong>Application is Slow or Freezes after running for a long time:</strong></p>
+</li>
+<li>
+<p><strong>Troubleshooting:</strong> This could indicate frequent or long garbage collection pauses. A very large heap might lead to longer Full GC cycles. You might need to tune garbage collector algorithms or optimize your application&#8217;s memory usage.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This hands-on lab provides a practical understanding of how JVM heap allocation works and how to manage it using command-line parameters. Proper heap configuration is essential for robust and performant Java applications.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-configuration.html">JVM Configuration</a></span>
+  <span class="next"><a href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Introduction to JVM :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="jvm-architecture.html">
+    <link rel="next" href="jvm-as-a-runtime-environment.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
+    <li><a href="introduction-to-jvm.html">Introduction to JVM</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Introduction to JVM</h1>
+<h1 id="_introduction_to_the_java_virtual_machine_jvm" class="sect0"><a class="anchor" href="#_introduction_to_the_java_virtual_machine_jvm"></a>Introduction to the Java Virtual Machine (JVM)</h1>
+<div class="paragraph">
+<p>This section introduces the fundamental concept of the Java Virtual Machine (JVM), its role as a runtime environment, and its relationship with the Java Development Kit (JDK) and Java Runtime Environment (JRE). Understanding the JVM is crucial for anyone working with Java applications, as it is the core component responsible for executing Java programs.</p>
+</div>
+<div class="sect1">
+<h2 id="_what_is_the_java_virtual_machine_jvm"><a class="anchor" href="#_what_is_the_java_virtual_machine_jvm"></a>What is the Java Virtual Machine (JVM)?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Virtual Machine (JVM) is an abstract machine that provides a runtime environment in which Java bytecode can be executed. It acts as an interpreter and runtime engine for Java applications, abstracting the underlying hardware and operating system.</p>
+</div>
+<div class="paragraph">
+<p>When you compile a Java source file (<code>.java</code>), it is translated into an intermediate format known as Java bytecode (<code>.class</code> files). This bytecode is platform-agnostic, meaning it is not tied to a specific operating system or hardware architecture. The JVM&#8217;s primary function is to take this bytecode and execute it on a particular machine.</p>
+</div>
+<div class="paragraph">
+<p>The "virtual" aspect of the JVM is key to Java&#8217;s famous "Write Once, Run Anywhere" (WORA) principle. Developers write code once, compile it into bytecode, and then this same bytecode can be run on any system that has a compatible JVM installed, regardless of the operating system (Windows, macOS, Linux) or underlying hardware.</p>
+</div>
+<div class="ulist">
+<div class="title">Key Characteristics of JVM</div>
+<ul>
+<li>
+<p><strong>Platform Independent</strong>: It allows Java applications to run on any platform where a JVM is installed.</p>
+</li>
+<li>
+<p><strong>Memory Management</strong>: The JVM manages the application&#8217;s memory (e.g., heap, stack), handling allocation and garbage collection automatically.</p>
+</li>
+<li>
+<p><strong>Performance Optimization</strong>: It includes components like the Just-In-Time (JIT) compiler to optimize the execution of bytecode into native machine code for improved performance.</p>
+</li>
+<li>
+<p><strong>Security</strong>: The JVM provides a secure execution environment, preventing bytecode from directly accessing the host system&#8217;s resources, thus enforcing sandboxing.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jvm_as_a_runtime_environment"><a class="anchor" href="#_jvm_as_a_runtime_environment"></a>JVM as a Runtime Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JVM is fundamentally a runtime environment. When you initiate a Java application (e.g., by executing <code>java MyProgram</code>), a JVM instance is automatically created. This instance is responsible for loading the compiled Java bytecode, verifying it, and then executing the instructions contained within.</p>
+</div>
+<div class="paragraph">
+<p>Unlike other software components that might reside in a specific folder, a JVM instance is dynamically created when a Java application is launched and ceases to exist once the application completes its execution. It provides all the necessary components for a Java application to run:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Class Loader</strong>: Responsible for loading Java classes into the JVM memory.</p>
+</li>
+<li>
+<p><strong>Method Area</strong>: Stores class structures, method data, and constant pool information.</p>
+</li>
+<li>
+<p><strong>Heap</strong>: The runtime data area where objects are allocated.</p>
+</li>
+<li>
+<p><strong>Stack</strong>: Stores local variables and partial results, playing a role in method invocation.</p>
+</li>
+<li>
+<p><strong>PC Registers</strong>: Holds the address of the currently executing JVM instruction.</p>
+</li>
+<li>
+<p><strong>Native Method Stacks</strong>: Supports native methods written in languages other than Java.</p>
+</li>
+<li>
+<p><strong>Execution Engine</strong>: Executes the bytecode, including an interpreter, JIT compiler, and garbage collector.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate [the internal architecture of the JVM showing its components like Class Loader, Memory Areas, and Execution Engine]</p>
+</div>
+<div class="paragraph">
+<div class="title">Real-World Example: Running a Simple Java Application</div>
+<p>Consider a simple Java program named <code>HelloWorld.java</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, JVM!");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Compilation</strong>: You compile this using the Java compiler (<code>javac</code>):
+<code><code>bash
+javac HelloWorld.java
+</code></code>
+This produces <code>HelloWorld.class</code> (bytecode).</p>
+</li>
+<li>
+<p><strong>Execution</strong>: You run the compiled bytecode using the <code>java</code> command:
+<code><code>bash
+java HelloWorld
+</code></code>
+When <code>java HelloWorld</code> is executed, a JVM instance is launched. This JVM loads the <code>HelloWorld.class</code> file, verifies its bytecode, and then executes the <code>main</code> method, printing "Hello, JVM!" to the console. The JVM manages all the underlying operations, from memory allocation to execution, transparently.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Common applications that rely on the JVM include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Enterprise Applications</strong>: Large-scale business applications often built using frameworks like Spring or Jakarta EE (formerly Java EE).</p>
+</li>
+<li>
+<p><strong>Web Servers</strong>: Application servers like Apache Tomcat, JBoss WildFly, and Eclipse Jetty run on the JVM to host web applications.</p>
+</li>
+<li>
+<p><strong>Big Data Technologies</strong>: Frameworks such as Apache Hadoop, Apache Spark, and Apache Kafka are largely written in Java/Scala and run on the JVM.</p>
+</li>
+<li>
+<p><strong>Android Applications</strong>: Although Android uses its own variant (ART/Dalvik), the development process heavily relies on the Java language and JVM concepts.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_relationship_between_jdk_jre_and_jvm"><a class="anchor" href="#_relationship_between_jdk_jre_and_jvm"></a>Relationship Between JDK, JRE, and JVM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While often used interchangeably by beginners, JDK, JRE, and JVM are distinct components that work together to enable Java development and execution. Understanding their hierarchy is fundamental.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JVM (Java Virtual Machine)</strong>:</p>
+</li>
+<li>
+<p>The core component responsible for executing Java bytecode.</p>
+</li>
+<li>
+<p>It&#8217;s an abstract machine, a specification that defines how to interpret bytecode.</p>
+</li>
+<li>
+<p>It&#8217;s part of the JRE.</p>
+</li>
+<li>
+<p><strong>JRE (Java Runtime Environment)</strong>:</p>
+</li>
+<li>
+<p>A set of software tools that enables the execution of Java applications.</p>
+</li>
+<li>
+<p>It <strong>contains</strong> the JVM and the necessary Java standard class libraries (e.g., <code>java.lang</code>, <code>java.util</code>).</p>
+</li>
+<li>
+<p>If you only need to <strong>run</strong> Java applications and not develop them, the JRE is sufficient.</p>
+</li>
+<li>
+<p><strong>JDK (Java Development Kit)</strong>:</p>
+</li>
+<li>
+<p>A complete software development environment for writing Java applications.</p>
+</li>
+<li>
+<p>It <strong>contains</strong> the JRE, plus development tools like the Java compiler (<code>javac</code>), debugger (<code>jdb</code>), archiver (<code>jar</code>), and documentation generator (<code>javadoc</code>).</p>
+</li>
+<li>
+<p>If you need to <strong>develop, compile, and run</strong> Java applications, the JDK is required.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In essence:
+*   JDK = JRE + Development Tools (e.g., <code>javac</code>)
+*   JRE = JVM + Standard Libraries (e.g., <code>rt.jar</code>)</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate [the nested relationship between JDK, JRE, and JVM, showing JDK encompassing JRE, which in turn encompasses JVM and libraries]</p>
+</div>
+<div class="paragraph">
+<div class="title">Java Vendors and Versions</div>
+<p>Since its initial release in 1995, Java has evolved significantly. New versions of the Java Standard Edition (Java SE) are typically released every six months. Major vendors provide implementations of the JDK (and thus JRE and JVM). The two most prominent are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Oracle JDK</strong>: Oracle&#8217;s commercial distribution of the JDK. While historically the primary choice, licensing changes have made OpenJDK more popular for many use cases.</p>
+</li>
+<li>
+<p><strong>OpenJDK</strong>: An open-source implementation of the Java SE platform. Many distributions (like Adoptium/Eclipse Temurin, Azul Zulu, Red Hat Build of OpenJDK) are built upon OpenJDK and are widely used in production environments. Their source code bases are largely identical.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hands_on_lab_installing_jdk_using_subscription_manager"><a class="anchor" href="#_hands_on_lab_installing_jdk_using_subscription_manager"></a>Hands-on Lab: Installing JDK using Subscription Manager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This lab activity will guide you through installing a Java Development Kit (JDK) on a Red Hat Enterprise Linux (RHEL) or CentOS system using the <code>subscription-manager</code> and <code>dnf</code> tools. This is a crucial first step for developing and running Java applications on your system.</p>
+</div>
+<div class="sect2">
+<h3 id="_lab_objective"><a class="anchor" href="#_lab_objective"></a>Lab Objective</h3>
+<div class="paragraph">
+<p>Install a specific OpenJDK version on a Linux system (RHEL/CentOS) using the system&#8217;s package manager, leveraged by <code>subscription-manager</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A Red Hat Enterprise Linux (RHEL) or CentOS system (version 8 or newer is recommended for <code>dnf</code>).</p>
+</li>
+<li>
+<p>Root or <code>sudo</code> privileges on the system.</p>
+</li>
+<li>
+<p>An active Red Hat subscription if using RHEL, to access relevant repositories via <code>subscription-manager</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-Step Instructions</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Connect to your Linux system</strong>:
+Open a terminal and connect to your RHEL/CentOS machine.</p>
+</li>
+<li>
+<p><strong>Check existing Java installations (Optional)</strong>:
+It&#8217;s good practice to check if Java is already installed.
+<code><code>bash
+java -version
+javac -version
+</code></code>
+If either command returns "command not found" or an old version, you&#8217;re ready to proceed with a fresh installation or update.</p>
+</li>
+<li>
+<p><strong>Enable the appropriate repository (for RHEL)</strong>:
+For RHEL, Java packages are typically found in the "CodeReady Linux Builder" or "AppStream" repositories. You might need to enable them. For OpenJDK, <code>AppStream</code> is usually sufficient.
+<code><code>bash
+sudo subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms # For RHEL 8
+# Or for RHEL 9
+# sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+</code></code>
+For CentOS Stream, repositories are usually enabled by default.</p>
+</li>
+<li>
+<p><strong>Search for available OpenJDK packages</strong>:
+Use <code>dnf</code> to list available OpenJDK packages. This helps you identify the specific version you want to install (e.g., OpenJDK 17, OpenJDK 11).
+<code><code>bash
+sudo dnf search openjdk
+</code></code>
+Look for packages named <code>java-*-openjdk-devel</code> for the full JDK. For example, <code>java-17-openjdk-devel</code>.</p>
+</li>
+<li>
+<p><strong>Install the desired OpenJDK Development Kit</strong>:
+Once you&#8217;ve identified the package name (e.g., <code>java-17-openjdk-devel</code>), install it.
+<code><code>bash
+sudo dnf install java-17-openjdk-devel -y
+</code></code>
+Replace <code>java-17-openjdk-devel</code> with the version you intend to install. The <code>-y</code> flag automatically confirms prompts.</p>
+</li>
+<li>
+<p><strong>Verify the installation</strong>:
+After the installation completes, verify that the JDK has been successfully installed and that the correct version is active.
+<code><code>bash
+java -version
+javac -version
+</code></code>
+You should see output similar to this (version numbers may vary):
+<code>`
+openjdk version "17.0.x" 202x-xx-xx
+OpenJDK Runtime Environment (build 17.0.x+x)
+OpenJDK 64-Bit Server VM (build 17.0.x+x, mixed mode, sharing)
+</code>`
+And for <code>javac</code>:
+<code>`
+javac 17.0.x
+</code>`</p>
+</li>
+<li>
+<p><strong>Set the default Java version (if multiple exist)</strong>:
+If you have multiple Java versions installed, you can use the <code>alternatives</code> command to set the default one.
+<code><code>bash
+sudo alternatives --config java
+sudo alternatives --config javac
+</code></code>
+Follow the prompts to select your preferred Java and Javac executable.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h3>
+<div class="paragraph">
+<p>You should have the selected OpenJDK Development Kit installed on your system. The <code>java -version</code> and <code>javac -version</code> commands should display the version information of the newly installed JDK.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Create a simple Java program</strong>:
+Create a file named <code>HelloJVM.java</code> with the following content:
+<code><code>java
+// HelloJVM.java
+public class HelloJVM {
+    public static void main(String[] args) {
+        System.out.println("JDK installation successful! Java version: " + System.getProperty("java.version"));
+    }
+}
+</code></code></p>
+</li>
+<li>
+<p><strong>Compile and run the program</strong>:
+<code><code>bash
+javac HelloJVM.java
+java HelloJVM
+</code></code></p>
+<div class="literalblock">
+<div class="content">
+<pre>You should see output similar to:
+```
+JDK installation successful! Java version: 17.0.x
+```
+This confirms that `javac` (the compiler) and `java` (the runtime) are both working correctly using your newly installed JDK.</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Error: 'rhel-*-appstream-rpms' does not exist or is not enabled.</code></strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: The <code>subscription-manager</code> command failed to enable the specified repository, possibly due to an incorrect repository ID or because your system is not properly subscribed.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Double-check the exact repository ID for your RHEL version using <code>sudo subscription-manager repos --list</code>. Ensure your system is registered and has an active subscription. For CentOS Stream, this step is typically not needed as repos are enabled by default.</p>
+</li>
+<li>
+<p><strong><code>No match for argument: java-17-openjdk-devel</code> or <code>Error: Unable to find a match: java-17-openjdk-devel</code></strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: The package name you tried to install is incorrect, or the repository containing it is not enabled.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Run <code>sudo dnf search openjdk</code> again to find the correct package name. Verify that the relevant AppStream repository is enabled.</p>
+</li>
+<li>
+<p><strong><code>java: command not found</code> or <code>javac: command not found</code> after installation</strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: The system&#8217;s <code>PATH</code> environment variable might not be updated, or the <code>alternatives</code> system hasn&#8217;t linked the new Java binaries correctly.</p>
+</li>
+<li>
+<p><strong>Solution</strong>:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify the binaries exist: <code>ls /usr/lib/jvm/java-17-openjdk*/bin/java</code>.</p>
+</li>
+<li>
+<p>Run <code>sudo alternatives --config java</code> and <code>sudo alternatives --config javac</code> to ensure the correct version is selected.</p>
+</li>
+<li>
+<p>Log out and log back in to your terminal session to refresh environment variables.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>JDK installation successful, but <code>java -version</code> shows an older version</strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: Multiple Java versions are installed, and the default <code>java</code> command still points to an older one.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Use <code>sudo alternatives --config java</code> and <code>sudo alternatives --config javac</code> to explicitly select the desired version as the system default.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-architecture.html">JVM Architecture</a></span>
+  <span class="next"><a href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

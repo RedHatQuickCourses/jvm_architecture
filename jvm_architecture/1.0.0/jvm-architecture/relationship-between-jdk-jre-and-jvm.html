@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Relationship between JDK, JRE, and JVM :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="jvm-as-a-runtime-environment.html">
+    <link rel="next" href="overview-of-jvm-internal-architecture.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
+    <li><a href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Relationship between JDK, JRE, and JVM</h1>
+<h1 id="_relationship_between_jdk_jre_and_jvm" class="sect0"><a class="anchor" href="#_relationship_between_jdk_jre_and_jvm"></a>Relationship between JDK, JRE, and JVM</h1>
+<div class="paragraph">
+<p>Java&#8217;s ecosystem comprises several fundamental components that work together to enable the development and execution of Java applications. Understanding the hierarchical relationship and distinct roles of the Java Development Kit (JDK), Java Runtime Environment (JRE), and Java Virtual Machine (JVM) is crucial for any Java developer or administrator.</p>
+</div>
+<div class="sect1">
+<h2 id="introduction-jdk-jre-jvm"><a class="anchor" href="#introduction-jdk-jre-jvm"></a>Introduction to JDK, JRE, and JVM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>At its core, Java&#8217;s "write once, run anywhere" philosophy is achieved through these three components. They form a layered architecture, with each layer building upon the capabilities of the one beneath it, providing a complete environment for Java programs.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JVM (Java Virtual Machine)</strong>: The innermost layer and the actual runtime engine. It&#8217;s responsible for executing Java bytecode, providing the runtime environment for a Java program to execute.</p>
+</li>
+<li>
+<p><strong>JRE (Java Runtime Environment)</strong>: This layer contains the JVM along with the core Java class libraries and supporting files. It provides everything necessary to <strong>run</strong> a compiled Java application.</p>
+</li>
+<li>
+<p><strong>JDK (Java Development Kit)</strong>: The outermost and most comprehensive layer. It includes the JRE, plus additional development tools that allow developers to <strong>develop</strong>, compile, and debug Java applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the hierarchical relationship between JDK, JRE, and JVM. A visual representation with nested boxes or circles (JVM inside JRE, JRE inside JDK) would clearly show the containment and delineate their respective contents and purposes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="jvm-the-java-virtual-machine"><a class="anchor" href="#jvm-the-java-virtual-machine"></a>JVM: The Java Virtual Machine</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JVM is an abstract computing machine that enables a computer to run Java programs. When Java source code (<code>.java</code> files) is compiled, it&#8217;s converted into platform-independent bytecode (<code>.class</code> files). The JVM then takes this bytecode and executes it on the underlying operating system and hardware, translating the bytecode into machine-specific instructions. This translation process is what allows Java to achieve its "write once, run anywhere" capability.</p>
+</div>
+<div class="paragraph">
+<p>Key responsibilities and characteristics of the JVM:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Bytecode Execution</strong>: Loads, verifies, and executes Java bytecode.</p>
+</li>
+<li>
+<p><strong>Runtime Environment Provider</strong>: Creates a dedicated runtime environment for each Java application instance, managing resources required for its execution.</p>
+</li>
+<li>
+<p><strong>Memory Management</strong>: Allocates and manages memory for various parts of a Java application, including the heap (for objects), method area (for class structures), stack (for method execution), and native method stack.</p>
+</li>
+<li>
+<p><strong>Garbage Collection</strong>: Automatically identifies and reclaims memory occupied by objects that are no longer referenced by the running application, preventing memory leaks.</p>
+</li>
+<li>
+<p><strong>Just-In-Time (JIT) Compiler</strong>: Modern JVMs include a JIT compiler that can compile frequently executed bytecode sequences into native machine code at runtime, significantly improving performance.</p>
+</li>
+<li>
+<p><strong>Security Manager</strong>: Enforces security policies to control what resources a Java application can access.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="jre-the-java-runtime-environment"><a class="anchor" href="#jre-the-java-runtime-environment"></a>JRE: The Java Runtime Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JRE is a collection of components that provide the necessary environment to run Java applications. It is specifically designed for end-users or deployment environments where only the execution of Java programs is required, not their development.</p>
+</div>
+<div class="paragraph">
+<p>The JRE fundamentally comprises:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Java Virtual Machine (JVM)</strong>: As detailed above, this is the core engine for bytecode execution.</p>
+</li>
+<li>
+<p><strong>Java Class Libraries</strong>: A vast set of pre-written code (organized into packages like <code>java.lang</code>, <code>java.util</code>, <code>java.io</code>, <code>java.net</code>, etc.). These libraries provide common functionalities such as input/output operations, networking, data structures, UI toolkits, and more, which Java applications can leverage.</p>
+</li>
+<li>
+<p><strong>Supporting Files</strong>: Other configuration files and resources crucial for the smooth operation of the Java platform.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When you install a JRE, you get everything required to execute a compiled Java application. However, you <strong>cannot</strong> compile new Java source code with a JRE alone, as it lacks the necessary development tools like the Java compiler (<code>javac</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="jdk-the-java-development-kit"><a class="anchor" href="#jdk-the-java-development-kit"></a>JDK: The Java Development Kit</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JDK is the comprehensive Java environment for developing, compiling, and running Java applications. If you are a Java developer, the JDK is indispensable, as it provides all the tools needed to write, compile, debug, and package Java code. The JDK encapsulates the JRE, along with additional development utilities.</p>
+</div>
+<div class="paragraph">
+<p>The JDK comprises:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Java Runtime Environment (JRE)</strong>: This includes the JVM and the core Java class libraries, enabling the execution of Java applications.</p>
+</li>
+<li>
+<p><strong>Development Tools</strong>: These are command-line utilities crucial for the Java development workflow:</p>
+</li>
+<li>
+<p><code>javac</code>: The Java compiler, which translates Java source code (<code>.java</code> files) into platform-independent Java bytecode (<code>.class</code> files).</p>
+</li>
+<li>
+<p><code>java</code>: The Java application launcher, which starts a JVM and executes a compiled Java application (<code>.class</code> files or <code>.jar</code> files).</p>
+</li>
+<li>
+<p><code>jar</code>: The Java archive tool, used to package related classes, resources, and metadata into a single JAR (Java Archive) file.</p>
+</li>
+<li>
+<p><code>javadoc</code>: The Java documentation tool, which generates API documentation in HTML format from special comments within Java source code.</p>
+</li>
+<li>
+<p><code>jdb</code>: The Java Debugger, a command-line utility for debugging Java applications.</p>
+</li>
+<li>
+<p><code>jconsole</code>, <code>jvisualvm</code>: Monitoring and profiling tools that provide graphical interfaces to monitor and manage Java applications and JVMs.</p>
+</li>
+<li>
+<p>Other utility tools for signing JARs, native-to-Java interface headers, etc.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="vendors-and-variations"><a class="anchor" href="#vendors-and-variations"></a>Vendors and Variations of JDK</h3>
+<div class="paragraph">
+<p>While the core functionality and adherence to the Java SE specification remain consistent, there are multiple implementations of the JDK provided by various vendors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Oracle JDK</strong>: The commercial and historically dominant implementation provided by Oracle.</p>
+</li>
+<li>
+<p><strong>OpenJDK</strong>: The open-source reference implementation of the Java Platform, Standard Edition (Java SE). Many organizations, including Red Hat, contribute significantly to OpenJDK and provide their own distributions (e.g., Red Hat build of OpenJDK).</p>
+</li>
+<li>
+<p><strong>IBM JDK</strong>: An implementation provided by IBM, often optimized for IBM&#8217;s own server platforms and middleware products.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The choice of JDK vendor often depends on licensing considerations, specific performance optimizations, and integration with other vendor-specific software. Regardless of the vendor, the fundamental architecture and core functionalities for developing and running Java applications are preserved according to the Java SE specification.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="when-to-use-which"><a class="anchor" href="#when-to-use-which"></a>When to Use Which: Practical Implications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Understanding when to use JDK, JRE, or how the JVM fits in is key to setting up your Java environment correctly:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>For Java Developers</strong>: If you are involved in writing, compiling, debugging, or packaging Java applications, you <strong>must</strong> install the <strong>JDK</strong>. It provides all the necessary tools and the runtime environment.</p>
+</li>
+<li>
+<p><strong>For Running Java Applications</strong>: If you only need to execute pre-compiled Java applications (e.g., on a production server, a client machine, or for testing purposes), a <strong>JRE</strong> is technically sufficient. It provides the JVM and core libraries without the development overhead.</p>
+</li>
+<li>
+<p><strong>JVM&#8217;s Role</strong>: The JVM is an integral component within both the JRE and JDK. You don&#8217;t install the JVM as a standalone entity; it comes bundled with either a JRE or a JDK.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In practical scenarios, particularly for servers and development machines, installing the <strong>JDK</strong> is a common practice. This is because the JDK includes the JRE and provides valuable diagnostic and management tools (<code>jcmd</code>, <code>jstack</code>, <code>jmap</code>, <code>jstat</code>, <code>jconsole</code>) that are often needed for monitoring and troubleshooting running Java applications, even in a production environment. For modern JDKs (Java 9+), the JRE components are often deeply integrated within the JDK installation, making the distinction between a separate JRE installation less common.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hands-on-lab-exploring-the-jdk-installation"><a class="anchor" href="#hands-on-lab-exploring-the-jdk-installation"></a>Hands-on Lab: Exploring the JDK Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This lab will guide you through exploring a typical JDK installation directory. By physically navigating the file system, you will visually identify the JRE components and development tools, solidifying your understanding of their relationship within the overall JDK structure.</p>
+</div>
+<div class="sect2">
+<h3 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>To locate and identify the core components of the JDK, JRE (or its integrated parts), and key development tools within a local Java installation.</p>
+</li>
+<li>
+<p>To understand the directory structure that reflects the hierarchical relationship between these components.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A machine with a Java Development Kit (JDK) already installed. Any standard JDK installation (e.g., OpenJDK, Oracle JDK 8+) will suffice. If you haven&#8217;t installed one, please refer to the "Installing JDK using Subscription Manager" lab later in this module.</p>
+</li>
+<li>
+<p>Basic command-line navigation skills (e.g., <code>cd</code>, <code>ls</code>/<code>dir</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-step Instructions</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Locate Your JDK Installation Directory</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Open a terminal or command prompt.</p>
+</li>
+<li>
+<p>The JDK root directory is typically where <code>JAVA_HOME</code> environment variable points, or where the <code>java</code> executable resides.</p>
+</li>
+<li>
+<p><strong>On Linux/macOS</strong>:</p>
+</li>
+<li>
+<p>Check <code>JAVA_HOME</code>: <code>echo $JAVA_HOME</code></p>
+</li>
+<li>
+<p>If not set, find <code>java</code> executable: <code>which java</code> then <code>ls -l $(which java)</code> to see the symlink to the actual JDK path. Common paths: <code>/usr/lib/jvm/</code>, <code>/opt/java/</code>.</p>
+</li>
+<li>
+<p><strong>On Windows</strong>:</p>
+</li>
+<li>
+<p>Check <code>JAVA_HOME</code>: <code>echo %JAVA_HOME%</code></p>
+</li>
+<li>
+<p>Common paths: <code>C:\Program Files\Java\jdk-VERSION\</code> or <code>C:\Program Files\AdoptOpenJDK\jdk-VERSION\</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Navigate to the JDK Root Directory</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Change your current directory to the identified JDK root.</p>
+</li>
+<li>
+<p>Example (Linux):
+[,bash]
+----
+cd /usr/lib/jvm/java-17-openjdk-amd64
+----</p>
+</li>
+<li>
+<p>Example (Windows):
+[,powershell]
+----
+cd "C:\Program Files\Java\jdk-17"
+----</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Explore the <code>bin</code> Directory (Development Tools and Java Launcher)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>List the contents of the <code>bin</code> subdirectory:
+[,bash]
+----
+ls bin/
+----</p>
+</li>
+<li>
+<p>Example (Windows):
+[,powershell]
+----
+dir bin\
+----</p>
+</li>
+<li>
+<p><strong>Expected Outcome</strong>: You should observe executables such as <code>javac</code> (the Java compiler), <code>java</code> (the Java application launcher), <code>jar</code> (archive tool), <code>javadoc</code> (documentation generator), and potentially <code>jdb</code>, <code>jconsole</code>, etc. The presence of <code>javac</code> is a key indicator that this is a JDK installation.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Identify JRE Components (JVM and Core Libraries)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>For JDK 8 and older</strong>: Look for a separate <code>jre</code> subdirectory within the JDK root.
+[,bash]
+----
+ls jre/
+----
+If present, this <code>jre</code> directory would contain its own <code>bin</code> (with <code>java</code> but <strong>no</strong> <code>javac</code>) and <code>lib</code> directories.</p>
+</li>
+<li>
+<p><strong>For JDK 9 and newer (Modular JDKs)</strong>: The JRE is no longer a separate directory but is integrated into the main JDK structure.</p>
+</li>
+<li>
+<p>The <code>lib</code> directory at the JDK root contains the core runtime libraries (e.g., <code>lib/modules</code> for modular JARs, or <code>lib/rt.jar</code> for older versions before modularity).</p>
+</li>
+<li>
+<p>The <code>bin</code> directory at the JDK root serves for both development and runtime, containing the <code>java</code> launcher and other tools.</p>
+</li>
+<li>
+<p><strong>Expected Outcome</strong>: You will find the necessary runtime libraries either in a dedicated <code>jre</code> folder (older JDKs) or directly under the JDK&#8217;s <code>lib</code> directory (modern JDKs). This demonstrates how the JRE&#8217;s functionality is either included or integrated within the JDK.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Verify <code>java</code> and <code>javac</code> Versions</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Execute the following commands to confirm that both the compiler and the runtime environment are accessible and correspond to your JDK installation:
+[,bash]
+----
+java -version
+javac -version
+----</p>
+</li>
+<li>
+<p><strong>Expected Outcome</strong>: Both commands should output version information (e.g., <code>openjdk version "17.0.8"</code>). The output confirms that you have a full JDK installed, providing both compilation (<code>javac</code>) and execution (<code>java</code>) capabilities.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You have successfully navigated to your JDK installation directory.</p>
+</li>
+<li>
+<p>You have visually identified the <code>javac</code> and <code>java</code> executables within the <code>bin</code> folder.</p>
+</li>
+<li>
+<p>You understand where the JRE&#8217;s core components (JVM and runtime libraries) reside within your specific JDK structure (either in a dedicated <code>jre</code> folder or integrated within the main <code>lib</code> directory).</p>
+</li>
+<li>
+<p>You have successfully executed <code>java -version</code> and <code>javac -version</code>, confirming your JDK environment is correctly set up.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>JAVA_HOME</code> not set or incorrect <code>PATH</code></strong>:</p>
+</li>
+<li>
+<p><strong>Symptom</strong>: Commands like <code>java</code> or <code>javac</code> are not found (e.g., "command not found" or "is not recognized as an internal or external command").</p>
+</li>
+<li>
+<p><strong>Troubleshooting</strong>: Ensure your <code>JAVA_HOME</code> environment variable points to the root of your JDK installation. Additionally, verify that <code>$JAVA_HOME/bin</code> (or <code>%JAVA_HOME%\bin</code> on Windows) is included in your system&#8217;s <code>PATH</code> environment variable.</p>
+</li>
+<li>
+<p><strong><code>javac</code> not found, but <code>java</code> works</strong>:</p>
+</li>
+<li>
+<p><strong>Symptom</strong>: You can run Java programs, but you cannot compile them.</p>
+</li>
+<li>
+<p><strong>Troubleshooting</strong>: This often indicates that your <code>PATH</code> is pointing to a JRE&#8217;s <code>bin</code> directory, or you only have a JRE installed, not a full JDK. Ensure you have installed a JDK and that your <code>PATH</code> points to the <strong>JDK&#8217;s</strong> <code>bin</code> directory.</p>
+</li>
+<li>
+<p><strong>Multiple Java installations leading to version conflicts</strong>:</p>
+</li>
+<li>
+<p><strong>Symptom</strong>: <code>java -version</code> and <code>javac -version</code> report different versions, or an unexpected version.</p>
+</li>
+<li>
+<p><strong>Troubleshooting</strong>: Explicitly set <code>JAVA_HOME</code> to the desired JDK version&#8217;s root and ensure <code>$JAVA_HOME/bin</code> is at the beginning of your <code>PATH</code> variable to prioritize it. On Linux/macOS, tools like <code>update-alternatives</code> or <code>sdkman</code> can help manage multiple Java versions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This hands-on activity directly demonstrates the practical structure of the JDK, illustrating how the JRE and the development tools are bundled together, reinforcing the conceptual understanding of their relationship.</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a></span>
+  <span class="next"><a href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

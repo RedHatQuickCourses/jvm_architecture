@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM Configuration in Domain Mode :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="jvm-configuration-in-standalone-mode.html">
+    <link rel="next" href="../hands-on-lab/hands-on-lab.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-architecture/jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-configuration.html">JVM Configuration</a></li>
+    <li><a href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JVM Configuration in Domain Mode</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section delves into the specifics of configuring Java Virtual Machine (JVM) parameters within a managed domain environment, such as JBoss EAP or WildFly. Unlike standalone mode where configuration applies to a single server instance, domain mode introduces centralized management across multiple server instances, often grouped into server groups. Understanding this architectural difference is key to effectively managing JVM settings in a clustered or distributed application environment.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_introduction_to_jvm_configuration_in_domain_mode"><a class="anchor" href="#_introduction_to_jvm_configuration_in_domain_mode"></a>Introduction to JVM Configuration in Domain Mode</h3>
+<div class="paragraph">
+<p>In a managed domain, multiple server instances can be controlled from a single point, the Domain Controller. These server instances are organized into <strong>server groups</strong>, and each server group can host various application servers (called <strong>servers</strong> or <strong>server instances</strong>). JVM configurations in domain mode are typically applied at the <strong>server group</strong> level, ensuring consistency for all servers belonging to that group. This approach simplifies management and promotes uniformity across your application deployments.</p>
+</div>
+<div class="paragraph">
+<p>The primary goal of configuring JVM parameters in a domain is to optimize the performance and stability of your Java applications running on the servers within that domain. This often involves adjusting memory allocation (heap, Metaspace), selecting appropriate garbage collectors, and setting other JVM flags.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the JBoss EAP/WildFly Domain Architecture, showing Domain Controller, Host Controllers, and Server Groups with multiple Server Instances. This would visually clarify how JVM settings propagate.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_understanding_domain_mode_for_configuration"><a class="anchor" href="#_understanding_domain_mode_for_configuration"></a>Understanding Domain Mode for Configuration</h3>
+<div class="paragraph">
+<p>Before diving into configuration specifics, it&#8217;s essential to briefly recall the core components of a managed domain:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Domain Controller (DC)</strong>: The central point of management for the entire domain. It stores the domain configuration (<code>domain.xml</code>).</p>
+</li>
+<li>
+<p><strong>Host Controller (HC)</strong>: Runs on each physical or virtual machine within the domain. It manages the server instances on its host and communicates with the Domain Controller. It stores host-specific configuration (<code>host.xml</code>).</p>
+</li>
+<li>
+<p><strong>Server Group</strong>: A logical grouping of server instances that share a common configuration profile and JVM settings.</p>
+</li>
+<li>
+<p><strong>Server Instance</strong>: An individual application server process (e.g., JBoss EAP server) that belongs to a server group.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When you configure JVM settings in domain mode, you are essentially modifying the <strong>profile</strong> or <strong>server group</strong> definition within the <code>domain.xml</code> file, which is then distributed and applied by the Host Controllers to the relevant server instances.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_key_configuration_concepts_in_domain_mode"><a class="anchor" href="#_key_configuration_concepts_in_domain_mode"></a>Key Configuration Concepts in Domain Mode</h3>
+<div class="paragraph">
+<p>Configuring JVMs in a domain environment involves understanding how settings are inherited and applied:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Profiles</strong>: Domain mode uses profiles (e.g., <code>default</code>, <code>full</code>, <code>full-ha</code>) to define subsystems and configurations. Server groups are associated with a specific profile. While JVM settings aren&#8217;t directly part of a <strong>profile</strong> definition in the same way subsystems are, they are often linked to the <strong>server group</strong> that uses a profile.</p>
+</li>
+<li>
+<p><strong>Server Groups</strong>: This is the primary abstraction for JVM configuration. Each server group can have its own JVM settings defined. All servers within a server group will inherit these settings.</p>
+</li>
+<li>
+<p><strong>JVM Elements</strong>: Within the server group definition, a <code>&lt;jvm&gt;</code> element is used to specify various JVM settings, including memory parameters, garbage collector options, and system properties.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The most common JVM parameters to configure are related to memory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Initial Heap Size (<code>-Xms</code>)</strong>: The initial amount of memory allocated to the JVM heap.</p>
+</li>
+<li>
+<p><strong>Maximum Heap Size (<code>-Xmx</code>)</strong>: The maximum amount of memory the JVM heap can use.</p>
+</li>
+<li>
+<p><strong>Maximum Metaspace Size (<code>-XX:MaxMetaspaceSize</code>)</strong>: The maximum size for Metaspace, where class metadata is stored (replaces PermGen in Java 8+).</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Setting <code>-Xms</code> and <code>-Xmx</code> to the same value can help reduce garbage collection pauses by preventing the heap from resizing. However, this also means the JVM will immediately claim the maximum allocated memory, which might not be efficient for environments with many small JVMs.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_methods_for_jvm_configuration_in_domain_mode"><a class="anchor" href="#_methods_for_jvm_configuration_in_domain_mode"></a>Methods for JVM Configuration in Domain Mode</h3>
+<div class="paragraph">
+<p>There are two primary ways to configure JVM settings in a JBoss EAP/WildFly domain:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Using <code>jboss-cli.sh</code> (Recommended)</strong>: The command-line interface is the most robust and recommended method. It ensures proper validation, syntax, and propagates changes across the domain safely.</p>
+</li>
+<li>
+<p><strong>Directly editing <code>domain.xml</code></strong>: While possible, direct editing is generally discouraged, especially in production environments, as it bypasses validation and can lead to errors if not done carefully. Changes require reloading or restarting the domain.</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="_1_using_jboss_cli_sh"><a class="anchor" href="#_1_using_jboss_cli_sh"></a>1. Using <code>jboss-cli.sh</code></h4>
+<div class="paragraph">
+<p>The <code>jboss-cli.sh</code> tool allows you to interact with the Domain Controller and apply configuration changes. For JVM settings, you typically target a specific server group.</p>
+</div>
+<div class="paragraph">
+<p>The general approach involves:
+.  Connecting to the Domain Controller.
+.  Navigating to the <code>/server-group=YOUR_SERVER_GROUP_NAME/jvm=YOUR_JVM_NAME</code> path.
+.  Using <code>add</code>, <code>write-attribute</code>, or <code>remove</code> operations to manage JVM settings.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>jvm</code> resource within a server group can be named arbitrarily (e.g., <code>default</code>, <code>my-jvm</code>, <code>app-jvm</code>). If no JVM is explicitly defined for a server group, it might inherit a default or use minimal settings.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<div class="title">Example: Adding a new JVM configuration to a server group</div>
+<p>To create a JVM configuration named <code>my-jvm</code> for a server group called <code>main-server-group</code>, you would use commands similar to these:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Connect to the Domain Controller
+/path/to/jboss-eap/bin/jboss-cli.sh --connect
+
+# Add a JVM configuration named 'my-jvm' to the 'main-server-group'
+# (This creates the JVM configuration element)
+/server-group=main-server-group/jvm=my-jvm:add()
+
+# Set initial heap size (Xms) to 512m
+/server-group=main-server-group/jvm=my-jvm:write-attribute(name=heap-init, value=512m)
+
+# Set maximum heap size (Xmx) to 2048m
+/server-group=main-server-group/jvm=my-jvm:write-attribute(name=heap-max, value=2048m)
+
+# Set maximum Metaspace size to 512m
+# Note: Other JVM options are typically added via the 'jvm-options' list.
+# For MaxMetaspaceSize, it's a common practice to include it in jvm-options.
+/server-group=main-server-group/jvm=my-jvm:write-attribute(name=jvm-options, value=["-XX:MaxMetaspaceSize=512m"])
+
+# To add multiple jvm-options, provide a comma-separated list
+# Example: Adding a garbage collector and another option
+/server-group=main-server-group/jvm=my-jvm:write-attribute(name=jvm-options, value=["-XX:MaxMetaspaceSize=512m", "-XX:+UseG1GC", "-Dmy.custom.property=value"])
+
+# To read the current configuration for verification
+/server-group=main-server-group/jvm=my-jvm:read-resource
+
+# Reload the server group for changes to take effect
+/server-group=main-server-group:reload-servers()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Example: Modifying an existing JVM configuration</div>
+<p>If a JVM configuration already exists (e.g., named <code>default</code> for <code>main-server-group</code>), you can modify its attributes directly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Connect to the Domain Controller
+/path/to/jboss-eap/bin/jboss-cli.sh --connect
+
+# Read current attributes to see what's set
+/server-group=main-server-group/jvm=default:read-resource
+
+# Modify the max heap size
+/server-group=main-server-group/jvm=default:write-attribute(name=heap-max, value=4096m)
+
+# Modify JVM options (this *replaces* the existing list, so include all desired options)
+/server-group=main-server-group/jvm=default:write-attribute(name=jvm-options, value=["-XX:MaxMetaspaceSize=768m", "-XX:+UseParallelGC"])
+
+# Reload servers in the group
+/server-group=main-server-group:reload-servers()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [screenshot] here showing <code>jboss-cli.sh</code> output after <code>read-resource</code> for a JVM configuration, highlighting <code>heap-init</code>, <code>heap-max</code>, and <code>jvm-options</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_directly_editing_domain_xml"><a class="anchor" href="#_2_directly_editing_domain_xml"></a>2. Directly Editing <code>domain.xml</code></h4>
+<div class="paragraph">
+<p>While not recommended for production, understanding the <code>domain.xml</code> structure can be helpful for advanced troubleshooting or specific use cases.</p>
+</div>
+<div class="paragraph">
+<p>The relevant section in <code>domain.xml</code> will be within the <code>&lt;server-groups&gt;</code> element:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;server-groups&gt;
+    &lt;server-group name="main-server-group" profile="full"&gt;
+        &lt;jvm name="my-jvm"&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;heap size="512m" max-size="2048m"/&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;jvm-options&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+                &lt;option value="-XX:MaxMetaspaceSize=512m"/&gt;
+                &lt;option value="-XX:+UseG1GC"/&gt;
+            &lt;/jvm-options&gt;
+        &lt;/jvm&gt;
+        &lt;socket-binding-group ref="standard-sockets"/&gt;
+    &lt;/server-group&gt;
+&lt;/server-groups&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Defines a JVM configuration named <code>my-jvm</code> for <code>main-server-group</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Sets the initial (<code>size</code>) and maximum (<code>max-size</code>) heap.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Lists additional JVM options.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Changes made directly to <code>domain.xml</code> require the Domain Controller and potentially the Host Controllers and server instances to be reloaded or restarted for the changes to take effect.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_real_world_examples_and_best_practices"><a class="anchor" href="#_real_world_examples_and_best_practices"></a>Real-world Examples and Best Practices</h3>
+<div class="paragraph">
+<p>Consider the following scenarios and best practices when configuring JVMs in a domain:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Homogeneous Server Groups</strong>: For optimal stability and simplified management, create server groups where all servers have similar resource requirements. This allows a single JVM configuration to be applied consistently.</p>
+</li>
+<li>
+<p><strong>Dedicated Memory</strong>: Allocate sufficient memory for each server instance. A common mistake is to over-provision the number of servers on a physical host without considering the cumulative memory requirements, leading to <strong>out-of-memory</strong> errors or excessive swapping.</p>
+</li>
+<li>
+<p><strong>Garbage Collector Selection</strong>:</p>
+</li>
+<li>
+<p><code>G1GC</code> (<code>-XX:+UseG1GC</code>): Often a good choice for multi-processor machines with large heaps (4GB or more) that require predictable pause times.</p>
+</li>
+<li>
+<p><code>ParallelGC</code> (<code>-XX:+UseParallelGC</code>): Good for throughput-oriented applications where short garbage collection pauses are less critical.</p>
+</li>
+<li>
+<p><code>CMS</code> (<code>-XX:+UseConcMarkSweepGC</code>): Deprecated in newer Java versions, but historically used for low-latency applications. Prefer <code>G1GC</code> or <code>ZGC</code>/<code>ShenandoahGC</code> (if available and licensed).</p>
+</li>
+<li>
+<p><strong>Metaspace Sizing</strong>: Monitor Metaspace usage. If <code>java.lang.OutOfMemoryError: Metaspace</code> errors occur, increase <code>-XX:MaxMetaspaceSize</code>. Start with a reasonable default (e.g., 256m or 512m) and adjust based on application needs.</p>
+</li>
+<li>
+<p><strong>Troubleshooting</strong>:</p>
+</li>
+<li>
+<p>Enable garbage collection logging (<code>-Xlog:gc*:/path/to/gc.log:time,level,tags</code>).</p>
+</li>
+<li>
+<p>Use JConsole, VisualVM, or JMC (Java Mission Control) to monitor JVM health and memory usage in real-time.</p>
+</li>
+<li>
+<p>Analyze heap dumps (<code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/path/to/dumps</code>) to identify memory leaks.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hands_on_lab_configuring_jvm_memory_for_a_server_group"><a class="anchor" href="#_hands_on_lab_configuring_jvm_memory_for_a_server_group"></a>Hands-on Lab: Configuring JVM Memory for a Server Group</h3>
+<div class="paragraph">
+<p>In this lab, you will configure the JVM memory settings for a server group in a JBoss EAP/WildFly managed domain using the <code>jboss-cli.sh</code> tool.</p>
+</div>
+<div class="sect3">
+<h4 id="_lab_objective"><a class="anchor" href="#_lab_objective"></a>Lab Objective</h4>
+<div class="paragraph">
+<p>To successfully modify the initial and maximum heap size, and add a Metaspace size limit for a specific server group within a JBoss EAP/WildFly domain.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A running JBoss EAP or WildFly managed domain setup. This includes:</p>
+</li>
+<li>
+<p>A Domain Controller (DC) instance.</p>
+</li>
+<li>
+<p>At least one Host Controller (HC) instance registered with the DC.</p>
+</li>
+<li>
+<p>At least one server group (e.g., <code>main-server-group</code> or <code>other-server-group</code>) with active server instances.</p>
+</li>
+<li>
+<p>Access to the <code>jboss-cli.sh</code> utility.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-step Instructions</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Start your JBoss EAP/WildFly Domain Controller and Host Controller(s)</strong>.
+If they are not already running, navigate to your JBoss EAP/WildFly installation directory and start them:
+[source,bash]
+----
+# On the Domain Controller host
+./bin/domain.sh</p>
+<div class="literalblock">
+<div class="content">
+<pre># On a Host Controller host
+./bin/host.sh
+----</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Connect to the Domain Controller using <code>jboss-cli.sh</code></strong>.
+Open a new terminal and navigate to the <code>bin</code> directory of your JBoss EAP/WildFly installation. Then, connect to the CLI:
+[source,bash]
+----
+./jboss-cli.sh --connect
+----
+You should see a prompt like <code>[domain@localhost:9990 /]</code>.</p>
+</li>
+<li>
+<p><strong>Identify an existing server group</strong>.
+List the available server groups to choose one for configuration. For this lab, we will assume a server group named <code>main-server-group</code> exists.
+[source,bash]
+----
+/server-group:read-resource
+----
+Look for a server group like <code>main-server-group</code> or <code>other-server-group</code>.</p>
+</li>
+<li>
+<p><strong>Read the current JVM configuration for your chosen server group</strong>.
+Before making changes, inspect the current JVM settings for the <code>main-server-group</code>. We&#8217;ll assume a JVM configuration named <code>default</code> exists. If not, you might need to add one in the next step.
+[source,bash]
+----
+/server-group=main-server-group/jvm=default:read-resource
+----
+If this command fails with an error like <code>WFLYCTL0216: Management resource &#8230;&#8203; not found</code>, it means no <code>default</code> JVM configuration exists. You&#8217;ll need to create it.</p>
+</li>
+<li>
+<p><strong>Configure JVM memory parameters</strong>.
+We will set the initial heap to 512MB (<code>-Xms512m</code>), maximum heap to 2GB (<code>-Xmx2g</code>), and maximum Metaspace size to 512MB (<code>-XX:MaxMetaspaceSize=512m</code>).</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>If no <code>default</code> JVM configuration exists</strong>:
+Create the <code>default</code> JVM element and set parameters.
+[source,bash]
+----
+/server-group=main-server-group/jvm=default:add()
+/server-group=main-server-group/jvm=default:write-attribute(name=heap-init, value=512m)
+/server-group=main-server-group/jvm=default:write-attribute(name=heap-max, value=2g)
+/server-group=main-server-group/jvm=default:write-attribute(name=jvm-options, value=["-XX:MaxMetaspaceSize=512m"])
+----</p>
+</li>
+<li>
+<p><strong>If a <code>default</code> JVM configuration already exists</strong>:
+Modify the existing attributes. Remember that <code>jvm-options</code> will replace the entire list, so ensure you include all desired options.
+[source,bash]
+----
+/server-group=main-server-group/jvm=default:write-attribute(name=heap-init, value=512m)
+/server-group=main-server-group/jvm=default:write-attribute(name=heap-max, value=2g)
+/server-group=main-server-group/jvm=default:write-attribute(name=jvm-options, value=["-XX:MaxMetaspaceSize=512m"])
+----</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Verify the changes</strong>.
+Read the resource again to confirm your new settings.
+[source,bash]
+----
+/server-group=main-server-group/jvm=default:read-resource(include-runtime=true)
+----
+You should see <code>heap-init</code>, <code>heap-max</code>, and <code>jvm-options</code> reflecting your changes. The <code>include-runtime=true</code> will show current settings for running servers, which won&#8217;t reflect the new values until reloaded.</p>
+</li>
+<li>
+<p><strong>Reload the server group to apply changes</strong>.
+For the changes to take effect on the running server instances within the <code>main-server-group</code>, you must reload them.
+[source,bash]
+----
+/server-group=main-server-group:reload-servers()
+----
+Confirm the operation by typing <code>yes</code> when prompted.</p>
+</li>
+<li>
+<p><strong>Validate the configuration on a running server</strong>.
+After reloading, connect to one of the server instances belonging to <code>main-server-group</code> (e.g., <code>server-one</code>) and check its JVM arguments.
+[source,bash]
+----
+/host=master/server=server-one/jvm=default:read-resource(include-runtime=true)
+----
+Look at the <code>system-properties</code> or <code>vm-arguments</code> (depending on JBoss EAP/WildFly version and specific output structure) to confirm <code>-Xms512m</code>, <code>-Xmx2g</code>, and <code>-XX:MaxMetaspaceSize=512m</code> are present. You can also view the server logs for startup messages indicating JVM options.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h4>
+<div class="paragraph">
+<p>After completing the lab, the JBoss EAP/WildFly server instances within the <code>main-server-group</code> will be configured to start with an initial JVM heap of 512MB, a maximum heap of 2GB, and a maximum Metaspace size of 512MB. You should be able to verify these settings using the <code>jboss-cli.sh</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>After <code>reload-servers()</code>, run <code>/server-group=main-server-group/jvm=default:read-resource</code> again and ensure <code>heap-init</code>, <code>heap-max</code>, and <code>jvm-options</code> show the configured values.</p>
+</li>
+<li>
+<p>Check the server logs (<code>server.log</code>) for any server instance in the <code>main-server-group</code>. During startup, the server often logs the JVM arguments it is using. Search for <code>-Xms</code>, <code>-Xmx</code>, and <code>MaxMetaspaceSize</code> in these logs.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>WFLYCTL0216: Management resource [&#8230;&#8203;] not found</code></strong>: This error indicates that the specific <code>jvm=default</code> resource does not exist for the <code>main-server-group</code>. You need to add it using the <code>add()</code> operation first, as shown in the instructions.</p>
+</li>
+<li>
+<p><strong>Incorrect syntax in <code>jvm-options</code></strong>: JVM options are case-sensitive and must be specified exactly. A typo (e.g., <code>MaxMetaspace</code> instead of <code>MaxMetaspaceSize</code>) will lead to the JVM failing to start or ignoring the option. Always verify with <code>read-resource</code>.</p>
+</li>
+<li>
+<p><strong>Servers failing to restart/reload</strong>: If the servers fail to reload or come up, check the <code>server.log</code> for the specific server instance on the Host Controller machine. Look for <code>java.lang.OutOfMemoryError</code> messages or <code>Invalid initial heap size</code> errors, which might indicate incorrect memory values (e.g., <code>-Xms</code> greater than <code>-Xmx</code>, or values too large for the available physical memory).</p>
+</li>
+<li>
+<p><strong>Changes not taking effect</strong>: Ensure you have executed the <code>reload-servers()</code> command for the respective server group. Configuration changes are not active until the servers are reloaded or restarted.</p>
+</li>
+<li>
+<p><strong><code>Operation failed</code></strong>: If a CLI operation fails, read the error message carefully. It often provides clues about invalid attributes, values, or incorrect paths.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [video] here demonstrating the <code>jboss-cli.sh</code> commands for JVM configuration and verification in a domain, including the <code>reload-servers()</code> step.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a></span>
+  <span class="next"><a href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

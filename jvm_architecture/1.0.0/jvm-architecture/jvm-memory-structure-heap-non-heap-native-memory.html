@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM Memory Structure (Heap, Non-Heap, Native Memory) :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="overview-of-jvm-internal-architecture.html">
+    <link rel="next" href="../jvm-configuration/jvm-configuration.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
+    <li><a href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JVM Memory Structure (Heap, Non-Heap, Native Memory)</h1>
+<h1 id="_jvm_memory_structure_heap_non_heap_native_memory" class="sect0"><a class="anchor" href="#_jvm_memory_structure_heap_non_heap_native_memory"></a>JVM Memory Structure (Heap, Non-Heap, Native Memory)</h1>
+<div class="paragraph">
+<p>This section delves into the fundamental memory architecture of the Java Virtual Machine (JVM), exploring how it allocates and manages memory from the underlying operating system to execute Java applications. Understanding these memory areas is crucial for performance tuning, troubleshooting memory-related issues, and optimizing resource utilization.</p>
+</div>
+<div class="sect1">
+<h2 id="_overview_of_jvm_memory_areas"><a class="anchor" href="#_overview_of_jvm_memory_areas"></a>Overview of JVM Memory Areas</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JVM manages several distinct memory areas that are used for various purposes during the execution of a Java application. These areas are primarily categorized into Heap memory, Non-Heap memory, and the broader concept of Native memory. While Heap and Non-Heap are directly managed by the JVM&#8217;s garbage collector or internal mechanisms, Native memory refers to the total footprint the JVM process consumes from the operating system, which includes the Heap and Non-Heap, along with other OS-level allocations like thread stacks and direct byte buffers.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting a diagram here to illustrate the high-level JVM memory areas (Heap, Non-Heap, Native Memory within OS process).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_heap_memory"><a class="anchor" href="#_heap_memory"></a>Heap Memory</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Heap is the most critical and typically the largest memory area managed by the JVM. It is the runtime data area from which memory for all Java class instances (objects) and arrays is allocated.</p>
+</div>
+<div class="sect2">
+<h3 id="_purpose_and_characteristics"><a class="anchor" href="#_purpose_and_characteristics"></a>Purpose and Characteristics</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Object Storage</strong>: All objects created by a Java application (e.g., <code>new MyClass()</code>, <code>new int[10]</code>) reside in the Heap.</p>
+</li>
+<li>
+<p><strong>Shared Resource</strong>: The Heap is shared among all threads of a running Java application.</p>
+</li>
+<li>
+<p><strong>Garbage Collection (GC)</strong>: Memory in the Heap is automatically managed by the JVM&#8217;s garbage collector. When objects are no longer referenced by the application, the GC reclaims their memory, making it available for new objects.</p>
+</li>
+<li>
+<p><strong>Dynamic Size</strong>: The Heap is created when the JVM starts and its size can dynamically increase or decrease during application execution, within predefined limits. These limits are configured using JVM arguments.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_heap_memory_configuration"><a class="anchor" href="#_heap_memory_configuration"></a>Heap Memory Configuration</h3>
+<div class="paragraph">
+<p>The size of the Heap memory is typically configured using two main JVM arguments:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-Xms&lt;size&gt;</code>: Specifies the <strong>initial</strong> (minimum) Heap size. The JVM starts with this amount of memory allocated to the Heap.</p>
+</li>
+<li>
+<p><code>-Xmx&lt;size&gt;</code>: Specifies the <strong>maximum</strong> Heap size. The Heap will not grow beyond this limit.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the application attempts to allocate objects beyond the maximum Heap size, an <code>OutOfMemoryError: Java heap space</code> will be thrown, causing the application to fail.</p>
+</div>
+<div class="paragraph">
+<div class="title">Real-world Example: Web Server Application</div>
+<p>Consider a web server application. Each incoming user request might create several objects: a <code>HttpRequest</code> object, <code>HttpResponse</code> object, session data objects, database connection objects, and objects for processing business logic. All these objects are allocated in the Heap. If the server experiences a sudden surge in traffic, it will create many more objects, requiring the Heap to expand up to its <code>-Xmx</code> limit. If the limit is too low, the application will crash.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting a diagram here showing the structure of the Java Heap (e.g., Young Generation, Old Generation). This can be briefly introduced as a future topic for GC.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_non_heap_memory"><a class="anchor" href="#_non_heap_memory"></a>Non-Heap Memory</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Non-Heap memory, also known as <code>Native memory</code> in some contexts from the perspective of <strong>Java objects</strong> not residing there, is distinct from the Heap. It stores metadata, JVM internal structures, and compiled code, rather than application data objects.</p>
+</div>
+<div class="sect2">
+<h3 id="_components_of_non_heap_memory"><a class="anchor" href="#_components_of_non_heap_memory"></a>Components of Non-Heap Memory</h3>
+<div class="paragraph">
+<p>The Non-Heap memory area comprises several key sub-components:</p>
+</div>
+<div class="ulist">
+<div class="title">Metaspace</div>
+<ul>
+<li>
+<p><strong>Purpose</strong>: Stores metadata about loaded classes. This includes class definitions, method data, field data, and runtime constant pools. In older JVM versions (Java 7 and earlier), this was known as PermGen (Permanent Generation).</p>
+</li>
+<li>
+<p><strong>Characteristics</strong>: Metaspace can automatically expand its size up to the available native memory of the host system, by default. However, its maximum size can be controlled using the <code>-XX:MaxMetaspaceSize=&lt;size&gt;</code> JVM argument. If not explicitly limited, a memory leak in class loading can exhaust the system&#8217;s native memory.</p>
+</li>
+<li>
+<p><strong>Impact</strong>: Excessive class loading or class loader leaks can lead to <code>OutOfMemoryError: Metaspace</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Code Cache</div>
+<ul>
+<li>
+<p><strong>Purpose</strong>: Stores the native code generated by the JVM&#8217;s Just-In-Time (JIT) compiler. The JIT compiler optimizes frequently executed Java bytecode into native machine code for improved performance.</p>
+</li>
+<li>
+<p><strong>Characteristics</strong>: The size of the Code Cache can be configured using <code>-XX:ReservedCodeCacheSize=&lt;size&gt;</code>.</p>
+</li>
+<li>
+<p><strong>Impact</strong>: If the Code Cache becomes full, the JIT compiler will stop compiling new code, potentially leading to performance degradation as the JVM reverts to interpreting bytecode.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">JVM Internal Structures</div>
+<ul>
+<li>
+<p><strong>Purpose</strong>: This area houses various internal data structures used by the JVM itself. This includes:</p>
+</li>
+<li>
+<p>JVM&#8217;s own code and data.</p>
+</li>
+<li>
+<p>Profiler agent data.</p>
+</li>
+<li>
+<p>Just-In-Time (JIT) compiler internal data.</p>
+</li>
+<li>
+<p>Garbage Collector data structures.</p>
+</li>
+<li>
+<p>Symbol tables, etc.</p>
+</li>
+<li>
+<p><strong>Characteristics</strong>: This memory is managed directly by the JVM and its size is influenced by the JVM version and configuration.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Thread Stacks</div>
+<ul>
+<li>
+<p><strong>Purpose</strong>: Each Java thread has its own private stack memory. This stack stores method call frames, local variables, and partial results.</p>
+</li>
+<li>
+<p><strong>Characteristics</strong>: The size of each thread&#8217;s stack can be configured using <code>-Xss&lt;size&gt;</code>. If a program has deep recursion or many method calls, it might run out of stack space, resulting in a <code>StackOverflowError</code>.</p>
+</li>
+<li>
+<p><strong>Note</strong>: While distinct from Heap and other Non-Heap areas, thread stacks are part of the overall <strong>native memory</strong> consumed by the JVM process.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting a diagram here illustrating the components of Non-Heap memory (Metaspace, Code Cache, Thread Stacks).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_native_memory_operating_system_memory"><a class="anchor" href="#_native_memory_operating_system_memory"></a>Native Memory (Operating System Memory)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Native memory refers to the total memory allocated by the operating system for the entire JVM process. This encompasses all the memory used by the JVM, including the Heap, Non-Heap components, and other allocations that are not directly managed by the Java runtime but are part of the JVM process&#8217;s footprint.</p>
+</div>
+<div class="sect2">
+<h3 id="_relationship_to_heap_and_non_heap"><a class="anchor" href="#_relationship_to_heap_and_non_heap"></a>Relationship to Heap and Non-Heap</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The Heap and Non-Heap (Metaspace, Code Cache, etc.) are memory regions <strong>within</strong> the JVM process that obtain their memory from the overall native memory allocated by the OS to that process.</p>
+</li>
+<li>
+<p>Beyond the JVM-managed areas, native memory also includes:</p>
+</li>
+<li>
+<p><strong>Direct Byte Buffers</strong>: Memory allocated outside the Java Heap for direct I/O operations (e.g., using <code>java.nio.ByteBuffer.allocateDirect()</code>).</p>
+</li>
+<li>
+<p><strong>JNI (Java Native Interface) Memory</strong>: Memory allocated by native libraries loaded via JNI calls.</p>
+</li>
+<li>
+<p><strong>OS/JVM Overheads</strong>: Memory used by the operating system for process management, JVM internal code, and other system resources.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Real-world Scenario: Native Memory Leaks</div>
+<p>A common issue is a native memory leak, which can occur if an application uses direct byte buffers or JNI libraries that do not properly release native memory. Even if your Java Heap is perfectly managed by the GC, the overall JVM process can consume more and more OS memory, eventually leading to the OS killing the process or system instability. This can manifest as the JVM process&#8217;s memory footprint (as seen by <code>top</code> or <code>ps</code>) growing even though the Java Heap (<code>jstat</code>) remains stable.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hands_on_lab_observing_jvm_memory_usage"><a class="anchor" href="#_hands_on_lab_observing_jvm_memory_usage"></a>Hands-on Lab: Observing JVM Memory Usage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this lab, you will start a simple Java application with specific Heap memory settings and then observe its memory usage from the operating system perspective.</p>
+</div>
+<div class="sect2">
+<h3 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Understand how to configure JVM Heap memory parameters (<code>-Xms</code>, <code>-Xmx</code>).</p>
+</li>
+<li>
+<p>Observe the difference between JVM-reported Heap usage and the overall process memory footprint from the OS.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A Linux environment (e.g., CentOS, RHEL).</p>
+</li>
+<li>
+<p>JDK installed (e.g., OpenJDK 11 or higher). If not, refer to the "Installing JDK using Subscription Manager" lab.</p>
+</li>
+<li>
+<p>Basic familiarity with command-line tools (<code>java</code>, <code>jps</code>, <code>top</code>, <code>ps</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-Step Instructions</h3>
+<div class="paragraph">
+<div class="title">Step 1: Create a Sample Java Application</div>
+<p>We will create a simple Java application that continuously allocates objects to gradually fill the Heap.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Create a file named <code>MemoryEater.java</code> with the following content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.util.ArrayList;
+import java.util.List;
+
+public class MemoryEater {
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("MemoryEater application started.");
+        List&lt;byte[]&gt; list = new ArrayList&lt;&gt;();
+        int mb = 1024 * 1024;
+        long totalMemoryAllocated = 0;
+
+        try {
+            while (true) {
+                byte[] data = new byte[mb]; // Allocate 1 MB
+                list.add(data);
+                totalMemoryAllocated += mb;
+                System.out.println("Allocated " + (totalMemoryAllocated / mb) + " MB. Current list size: " + list.size());
+                Thread.sleep(100); // Small pause to allow observation
+            }
+        } catch (OutOfMemoryError e) {
+            System.err.println("Caught OutOfMemoryError: " + e.getMessage());
+            System.err.println("Total memory allocated before OOM: " + (totalMemoryAllocated / mb) + " MB");
+            Thread.sleep(60000); // Keep alive for a minute to observe
+        } finally {
+            System.out.println("MemoryEater application exiting.");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Compile the Java application:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">javac MemoryEater.java</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Step 2: Run the Application with Specific Heap Settings</div>
+<p>We will run the <code>MemoryEater</code> application with an initial Heap size of 64MB and a maximum Heap size of 256MB.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Open two terminal windows.</p>
+</li>
+<li>
+<p>In the first terminal, start the <code>MemoryEater</code> application:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -Xms64m -Xmx256m MemoryEater &amp;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>&amp;</code> puts the process in the background, allowing you to get your prompt back. Note down the PID (Process ID) that is displayed (e.g., <code>[1] 12345</code>). If it&#8217;s not displayed, you can find it using <code>jps</code> in the next step.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Step 3: Monitor JVM and OS Memory</div>
+<p>Now, observe how the JVM allocates and consumes memory.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the second terminal, find the PID of your <code>MemoryEater</code> application using <code>jps</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jps -l</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Identify the PID corresponding to <code>MemoryEater</code>. Let&#8217;s assume it&#8217;s <code>12345</code>.</p>
+</div>
+</li>
+<li>
+<p>Monitor the Java Heap usage using <code>jstat</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jstat -gc 12345 1s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command will print garbage collection statistics every 1 second.
+*   Observe the <code>S0C</code>, <code>S1C</code>, <code>EC</code>, <code>OC</code>, <code>MC</code>, <code>CCSC</code> columns (Capacity of Survivor spaces, Eden, Old, Metaspace, Compressed Class Space).
+*   Notice <code>OU</code> (Old Used) and <code>EU</code> (Eden Used) growing as the application allocates objects.
+*   The <code>YGC</code> (Young GC count) and <code>FGC</code> (Full GC count) will increase as garbage collection occurs.
+*   The sum of <code>S0C</code> + <code>S1C</code> + <code>EC</code> + <code>OC</code> should roughly match your <code>-Xmx</code> setting when fully utilized.</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>jstat</code> provides a deep view into Java Heap and GC behavior. <code>OU</code> and <code>EU</code> represent the <strong>actual</strong> amount of Java objects stored in the Heap at that moment.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Monitor the overall process memory usage using <code>top</code> or <code>ps</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">top -p 12345</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, for a snapshot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ps aux | grep MemoryEater</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In <code>top</code>, observe the <code>RES</code> (Resident Set Size) and <code>VIRT</code> (Virtual Memory Size) columns for your process.</p>
+</li>
+<li>
+<p><code>RES</code> indicates the amount of physical RAM the process is currently using.</p>
+</li>
+<li>
+<p>Notice that <code>RES</code> will be higher than the sum of used Heap (<code>OU</code> + <code>EU</code>) from <code>jstat</code>. This difference accounts for Non-Heap memory (Metaspace, Code Cache, thread stacks, JVM internal structures, etc.).</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>RES</code> from <code>top</code> represents the native memory footprint of the JVM process.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<div class="title">Step 4: Observe OutOfMemoryError</div>
+<p>Let the <code>MemoryEater</code> application continue running. It will eventually hit the <code>-Xmx256m</code> limit.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In the first terminal (where <code>MemoryEater</code> is running), observe the output. You will see it printing "Allocated X MB" messages.</p>
+</li>
+<li>
+<p>Eventually, it will print "Caught OutOfMemoryError: Java heap space" and then pause for a minute.</p>
+</li>
+<li>
+<p>While it&#8217;s paused, observe <code>jstat</code> and <code>top</code> again. Notice that even after the <code>OutOfMemoryError</code>, the process still consumes significant memory, as the JVM itself and the collected objects still occupy space until the process fully exits.</p>
+</li>
+</ol>
+</div>
+<div class="olist loweralpha">
+<div class="title">Step 5: Clean Up</div>
+<ol class="loweralpha" type="a">
+<li>
+<p>After observing the <code>OutOfMemoryError</code> and the subsequent pause, kill the <code>MemoryEater</code> process.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kill 12345 # Replace 12345 with your actual PID</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify it&#8217;s gone:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">jps</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>MemoryEater</code> application starts and continuously allocates memory.</p>
+</li>
+<li>
+<p><code>jstat</code> shows the Java Heap usage (<code>OU</code>, <code>EU</code>) increasing, followed by occasional GC cycles.</p>
+</li>
+<li>
+<p><code>top</code> shows the <code>RES</code> memory usage of the <code>java</code> process increasing as the Heap expands and other JVM memory areas are utilized.</p>
+</li>
+<li>
+<p>The application eventually throws an <code>OutOfMemoryError: Java heap space</code> when it exceeds the <code>-Xmx</code> limit.</p>
+</li>
+<li>
+<p>The <code>RES</code> memory reported by <code>top</code> will consistently be higher than the <strong>used</strong> Heap memory reported by <code>jstat</code>, demonstrating the existence of Non-Heap and other native memory components.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Confirm the <code>OutOfMemoryError</code> message in the <code>MemoryEater</code> terminal.</p>
+</li>
+<li>
+<p>Compare the maximum <code>OU</code> + <code>EU</code> reported by <code>jstat</code> (should be close to 256MB) with the <code>RES</code> value reported by <code>top</code> just before the OOM. The <code>RES</code> value will be higher.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Error: Could not find or load main class MemoryEater</code></strong>: Ensure you compiled the <code>MemoryEater.java</code> file correctly (<code>javac MemoryEater.java</code>) and are running the <code>java</code> command from the same directory where <code>MemoryEater.class</code> resides.</p>
+</li>
+<li>
+<p><strong><code>java.lang.OutOfMemoryError: Java heap space</code> (Unexpectedly early)</strong>: You might have used smaller <code>-Xmx</code> values. Increase <code>-Xmx</code> to allow more memory allocation.</p>
+</li>
+<li>
+<p><strong><code>jps</code> or <code>jstat</code> command not found</strong>: Ensure your JDK is properly installed and the <code>bin</code> directory of your JDK is in your system&#8217;s PATH environment variable.</p>
+</li>
+<li>
+<p><strong>Process doesn&#8217;t show in <code>top</code></strong>: Double-check the PID. Make sure the Java process is still running. Use <code>ps -ef | grep java</code> to see all Java processes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a></span>
+  <span class="next"><a href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

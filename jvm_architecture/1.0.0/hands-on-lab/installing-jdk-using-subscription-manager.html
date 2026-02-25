@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Installing JDK using Subscription Manager :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="hands-on-lab.html">
+    <link rel="next" href="../appendix/appendix.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-architecture/jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="hands-on-lab.html">Hands-on Lab</a></li>
+    <li><a href="installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Installing JDK using Subscription Manager</h1>
+<h1 id="_installing_jdk_using_subscription_manager" class="sect0"><a class="anchor" href="#_installing_jdk_using_subscription_manager"></a>Installing JDK using Subscription Manager</h1>
+<div class="paragraph">
+<p>This section provides a detailed guide on installing the Red Hat build of OpenJDK on a Red Hat Enterprise Linux (RHEL) system using the Subscription Manager and DNF package manager. This method ensures you receive a commercially supported and secure JDK distribution directly from Red Hat.</p>
+</div>
+<div class="sect1">
+<h2 id="_red_hat_build_of_openjdk"><a class="anchor" href="#_red_hat_build_of_openjdk"></a>Red Hat Build of OpenJDK</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Red Hat provides its own build of OpenJDK, which is a production-ready, open-source implementation of the Java Platform, Standard Edition (Java SE). Red Hat offers commercial support for its OpenJDK builds, making it a preferred choice for enterprise environments. While other vendors like Oracle and IBM also provide JDKs, the core functionality remains consistent, with potential variations in internal features or performance optimizations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-jdk-hands-on"><a class="anchor" href="#installing-jdk-hands-on"></a>Hands-on Lab: Installing Red Hat build of OpenJDK using Subscription Manager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This lab guides you through the process of installing the Red Hat build of OpenJDK on a RHEL system. We will leverage Red Hat Subscription Management (RHSM) and the DNF package manager to ensure a supported and properly configured installation.</p>
+</div>
+<div class="sect2">
+<h3 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h3>
+<div class="paragraph">
+<p>To successfully install a Red Hat build of OpenJDK (e.g., OpenJDK 11 or 17) on a Red Hat Enterprise Linux system using <code>subscription-manager</code> and <code>dnf</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>Before proceeding with the installation, ensure you have the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A Red Hat Enterprise Linux (RHEL) system (e.g., RHEL 8 or RHEL 9).</p>
+</li>
+<li>
+<p>An active Red Hat subscription attached to your RHEL system.</p>
+</li>
+<li>
+<p>Root privileges or <code>sudo</code> access on the RHEL system.</p>
+</li>
+<li>
+<p>Active internet connectivity from your RHEL system.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_understanding_red_hat_subscription_management_rhsm"><a class="anchor" href="#_understanding_red_hat_subscription_management_rhsm"></a>Understanding Red Hat Subscription Management (RHSM)</h3>
+<div class="paragraph">
+<p>Red Hat Subscription Management (RHSM) is a client-server technology that manages subscriptions for Red Hat products. On a RHEL system, the <code>subscription-manager</code> utility allows you to register your system with Red Hat, attach subscriptions, and enable repositories. Once repositories are enabled, the <code>dnf</code> (Dandified YUM) package manager can access the Red Hat content delivery network to install, update, and remove software packages, including OpenJDK.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-Step Instructions</h3>
+<div class="paragraph">
+<p>This procedure assumes you have a clean RHEL installation or one where existing Java installations are not interfering (though <code>alternatives</code> will help manage multiple versions).</p>
+</div>
+<div class="sect3">
+<h4 id="_step_1_verify_subscription_status"><a class="anchor" href="#_step_1_verify_subscription_status"></a>Step 1: Verify Subscription Status</h4>
+<div class="paragraph">
+<p>First, confirm that your RHEL system is registered and has an active subscription.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open a terminal and switch to the root user or use <code>sudo</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sudo -i</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check the system&#8217;s subscription status:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">subscription-manager status</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The output should indicate that the system is <strong>Subscribed</strong> and the overall status is <strong>Current</strong>. If it shows "Not Subscribed" or "Expired", you will need to register your system and attach a valid subscription.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>If your system is not subscribed, register and attach a subscription:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">subscription-manager register --auto-attach</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command will prompt you for your Red Hat account username and password. After successful registration, it will automatically attach the best available subscription.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_2_enable_required_repositories"><a class="anchor" href="#_step_2_enable_required_repositories"></a>Step 2: Enable Required Repositories</h4>
+<div class="paragraph">
+<p>To install OpenJDK packages, you need to ensure the correct repositories are enabled. The OpenJDK packages are typically found in the AppStream repository.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List available repositories:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">subscription-manager repos --list</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enable the relevant AppStream repository. For RHEL 8, it&#8217;s typically <code>rhel-8-for-x86_64-appstream-rpms</code>. For RHEL 9, it might be <code>rhel-9-for-x86_64-appstream-rpms</code>. Adjust the command based on your RHEL version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you are unsure of the exact repository ID, you can use <code>subscription-manager repos --list | grep -i appstream</code> to find it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_3_search_for_openjdk_packages"><a class="anchor" href="#_step_3_search_for_openjdk_packages"></a>Step 3: Search for OpenJDK Packages</h4>
+<div class="paragraph">
+<p>Before installing, it&#8217;s good practice to search for available OpenJDK packages to identify the desired version.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Search for <code>openjdk</code> using <code>dnf</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf search openjdk</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see a list of available OpenJDK packages, typically including various versions (e.g., <code>java-11-openjdk</code>, <code>java-17-openjdk</code>) and development tools (<code>java-*-openjdk-devel</code>). For most development and server purposes, installing the <code>-devel</code> package is recommended as it includes compilers and other development utilities.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_4_install_openjdk"><a class="anchor" href="#_step_4_install_openjdk"></a>Step 4: Install OpenJDK</h4>
+<div class="paragraph">
+<p>Choose the desired OpenJDK version (e.g., OpenJDK 11 or 17) and install its development package.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install OpenJDK 11 development kit:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install java-11-openjdk-devel -y</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Replace <code>java-11-openjdk-devel</code> with <code>java-17-openjdk-devel</code> or another specific version if required. The <code>-y</code> flag automatically confirms the installation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>DNF will resolve dependencies and download the necessary packages. Confirm the installation if not using <code>-y</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_5_verify_installation"><a class="anchor" href="#_step_5_verify_installation"></a>Step 5: Verify Installation</h4>
+<div class="paragraph">
+<p>After the installation completes, verify that Java is installed and the correct version is active.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check the Java runtime version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output should show the version you installed (e.g., OpenJDK 11).</p>
+</div>
+</li>
+<li>
+<p>Check the Java compiler version:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">javac -version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should also reflect the installed OpenJDK version.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_6_configure_default_java_version_optional_for_multiple_installations"><a class="anchor" href="#_step_6_configure_default_java_version_optional_for_multiple_installations"></a>Step 6: Configure Default Java Version (Optional, for multiple installations)</h4>
+<div class="paragraph">
+<p>If you have multiple Java versions installed on your system, you can use the <code>alternatives</code> command to set the default <code>java</code> and <code>javac</code> executables.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List available Java alternatives:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">alternatives --config java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see a list of installed Java executables and can choose which one to set as the default. Enter the selection number for your preferred version.</p>
+</div>
+</li>
+<li>
+<p>List available Java compiler alternatives:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">alternatives --config javac</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, choose the preferred Java compiler version.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h3>
+<div class="paragraph">
+<p>Upon successful completion of this lab, you should be able to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Execute <code>java -version</code> and <code>javac -version</code> commands from the terminal.</p>
+</li>
+<li>
+<p>See output indicating the Red Hat build of OpenJDK version you installed (e.g., OpenJDK 11 or 17).</p>
+</li>
+<li>
+<p>Your system will be configured to use this installed JDK for running and compiling Java applications.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run <code>java -version</code> and confirm the output matches the OpenJDK version you intended to install.</p>
+</li>
+<li>
+<p>Run <code>javac -version</code> and confirm it also matches.</p>
+</li>
+<li>
+<p>(Optional) Compile and run a simple Java "Hello World" program to ensure the JDK is fully functional.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a file <code>HelloWorld.java</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, OpenJDK from Red Hat!");
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Compile the program:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">javac HelloWorld.java</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the compiled program:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java HelloWorld</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The expected output is <code>Hello, OpenJDK from Red Hat!</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Error: "This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register."</strong></p>
+</li>
+<li>
+<p><strong>Cause</strong>: Your RHEL system is not registered with Red Hat.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Run <code>sudo subscription-manager register --auto-attach</code> and provide your Red Hat account credentials.</p>
+</li>
+<li>
+<p><strong>Error: "No subscriptions found through Auto-attach."</strong></p>
+</li>
+<li>
+<p><strong>Cause</strong>: Your Red Hat account might not have an active subscription available, or the system could not automatically attach one.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Verify your Red Hat account&#8217;s subscription status. You might need to manually attach a specific subscription using <code>subscription-manager attach --pool=&lt;POOL_ID&gt;</code>. Use <code>subscription-manager list --available</code> to find pool IDs.</p>
+</li>
+<li>
+<p><strong>Error: "No matching packages to install." or "Error: Unable to find a match: java-11-openjdk-devel"</strong></p>
+</li>
+<li>
+<p><strong>Cause</strong>: The relevant repository for OpenJDK packages is not enabled, or the package name is incorrect.</p>
+</li>
+<li>
+<p><strong>Solution</strong>:</p>
+</li>
+<li>
+<p>Ensure the AppStream repository is enabled (e.g., <code>subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms</code>).</p>
+</li>
+<li>
+<p>Run <code>dnf clean all</code> and then <code>dnf makecache</code> to refresh package metadata.</p>
+</li>
+<li>
+<p>Use <code>dnf search openjdk</code> to confirm the correct package name for your desired version.</p>
+</li>
+<li>
+<p><strong>Error: "Could not resolve host: access.redhat.com" or similar network errors during DNF operations.</strong></p>
+</li>
+<li>
+<p><strong>Cause</strong>: Your system lacks internet connectivity or DNS resolution issues.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Check your network configuration, ensure your system can reach external websites, and verify DNS settings.</p>
+</li>
+<li>
+<p><strong>Error: Permission denied during installation.</strong></p>
+</li>
+<li>
+<p><strong>Cause</strong>: You are not running the commands with sufficient privileges.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Ensure you are using <code>sudo</code> before commands that modify system settings or packages, or switch to the root user (<code>sudo -i</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [screenshot] here to show <code>java -version</code> output after successful installation.
+FIXME: Suggest inserting [screenshot] here to illustrate <code>alternatives --config java</code> selection menu.</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="hands-on-lab.html">Hands-on Lab</a></span>
+  <span class="next"><a href="../appendix/appendix.html">Appendix</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

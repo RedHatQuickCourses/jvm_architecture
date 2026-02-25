@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Parallel GC :: Understanding JVM Architecture and Configuration</title>
+    <title>JVM Architecture :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="../LABENV/index.html">
+    <link rel="next" href="introduction-to-jvm.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -51,24 +53,24 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../jvm-architecture/jvm-architecture.html">JVM Architecture</a>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-architecture/introduction-to-jvm.html">Introduction to JVM</a>
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-architecture/jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-architecture/relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-architecture/overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
   </li>
 </ul>
   </li>
@@ -160,7 +162,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
-    <li><a href="parallel-gc.html">Parallel GC</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
   </ul>
 </nav>
 </div>
@@ -169,80 +171,101 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Parallel GC</h1>
-<div class="sect1">
-<h2 id="_parallel_gc"><a class="anchor" href="#_parallel_gc"></a>Parallel GC</h2>
-<div class="sectionbody">
+<h1 class="page">JVM Architecture</h1>
+<div class="paragraph">
+<p>A Java Virtual Machine (JVM) provides a runtime environment for Java programs to execute. A JVM instance is automatically created whenever a Java application is launched.</p>
+</div>
+<div class="paragraph">
+<p>The core components of JVM architecture include:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>The Parallel GC is a garbage collection algorithm designed to improve the performance of garbage collection in multi-processor systems. It is a multi-threaded implementation of the Mark-Sweep-Compact algorithm, which is used to reclaim memory occupied by objects that are no longer in use by the application.</pre>
-</div>
-</div>
+<p><strong>Class Loader:</strong> Responsible for loading Java classes into memory during runtime.</p>
 </li>
 <li>
-<p><strong>How Parallel GC Works</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>Parallel GC divides the heap into multiple regions and assigns each region to a separate thread. Each thread performs garbage collection on its assigned region independently. This parallel processing allows for faster garbage collection compared to the single-threaded Serial GC.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>When a garbage collection cycle starts, the application threads are paused, and the Parallel GC begins its work. It identifies live objects and compacts them into contiguous memory areas, freeing up space for new object allocation. The key difference from the Serial GC is that Parallel GC utilizes multiple threads to process different heap regions simultaneously, thus reducing the overall garbage collection time.</pre>
-</div>
-</div>
-</li>
-<li>
-<p><strong>When to Use Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>Parallel GC is suitable for applications with large heaps and multiple processors or cores. It is particularly effective in scenarios where the application has a high allocation rate and frequent garbage collections. However, it may not be the optimal choice for applications with small heaps or those sensitive to pause times, as the stop-the-world nature of garbage collection can still cause noticeable pauses during the collection process.</pre>
-</div>
-</div>
-</li>
-<li>
-<p><strong>Tuning Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>To optimize the performance of Parallel GC, you can adjust various parameters, such as:</pre>
-</div>
-</div>
-</li>
-<li>
-<p><strong>NewRatio</strong>: This parameter controls the ratio of the young generation to the old generation. A higher value allocates more heap space to the young generation, which can reduce the frequency of major garbage collections.</p>
-</li>
-<li>
-<p><strong>ParallelGCThread</strong>: This parameter sets the number of threads used for parallel garbage collection. Increasing this value can improve the performance on multi-processor systems, but it may also increase the overhead of thread management.</p>
-</li>
-<li>
-<p><strong>SurvivorRatio</strong>: This parameter determines the size ratio of eden space to survivor spaces in the young generation. Adjusting this value can help balance the frequency of minor and major garbage collections.</p>
-</li>
-<li>
-<p><strong>Hands-on Activity: Using Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>To gain practical experience with Parallel GC, follow these steps:</pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Set up a Java development environment with OpenJDK.</p>
-</li>
-<li>
-<p>Create a Java application that generates a significant amount of garbage, such as a program that continuous</p>
-</li>
-</ol>
-</div>
+<p><strong>Runtime Data Areas:</strong> These are memory areas allocated by the JVM during execution.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting an <strong>architecture diagram</strong> here to illustrate the internal components of the JVM and their interactions.</p>
 </div>
+<div class="paragraph">
+<p><strong>JVM Memory Structure</strong></p>
 </div>
+<div class="paragraph">
+<p>JVM memory is primarily categorized into:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Heap Memory:</strong></p>
+</li>
+<li>
+<p>This is a configurable portion of the physical RAM allocated to the JVM.</p>
+</li>
+<li>
+<p>It stores all objects, instance variables, and arrays created by the application.</p>
+</li>
+<li>
+<p>Its size can be specified (e.g., 2 GB out of 10 GB RAM), limiting the maximum memory the JVM can use for object storage.</p>
+</li>
+<li>
+<p><strong>Non-Heap Memory:</strong></p>
+</li>
+<li>
+<p>Stores class metadata, method data, and other internal JVM structures.</p>
+</li>
+<li>
+<p><strong>Native Memory (Other):</strong></p>
+</li>
+<li>
+<p>Includes memory used by the JVM itself for its internal operations, such as for C++ code, JNI (Java Native Interface) libraries, and thread stacks.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Relationship between JDK, JRE, and JVM</strong></p>
+</div>
+<div class="paragraph">
+<p>The Java ecosystem components have a hierarchical relationship:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Java Development Kit (JDK):</strong></p>
+</li>
+<li>
+<p>The outermost layer, providing all tools necessary for Java development, including compilers (e.g., <code>javac</code>) and other utilities found in the <code>bin</code> folder.</p>
+</li>
+<li>
+<p>The JDK <strong>contains</strong> the JRE.</p>
+</li>
+<li>
+<p><strong>Java Runtime Environment (JRE):</strong></p>
+</li>
+<li>
+<p>Located inside the JDK, the JRE provides the libraries and resources required to <strong>run</strong> Java programs.</p>
+</li>
+<li>
+<p>The JRE <strong>contains</strong> the JVM.</p>
+</li>
+<li>
+<p><strong>Java Virtual Machine (JVM):</strong></p>
+</li>
+<li>
+<p>The innermost component, responsible for executing the Java bytecode. It provides the concrete runtime environment within the JRE.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting a <strong>nested diagram</strong> here to visually represent the relationship and containment structure of JDK, JRE, and JVM.</p>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../LABENV/index.html">Lab Environment</a></span>
+  <span class="next"><a href="introduction-to-jvm.html">Introduction to JVM</a></span>
+</nav>
 </article>
   </div>
 </main>

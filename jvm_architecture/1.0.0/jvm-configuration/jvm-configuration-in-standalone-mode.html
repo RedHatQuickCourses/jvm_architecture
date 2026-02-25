@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM Configuration in Standalone Mode :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="jvm-memory-allocation-heap-space.html">
+    <link rel="next" href="jvm-configuration-in-domain-mode.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-architecture/jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-configuration.html">JVM Configuration</a></li>
+    <li><a href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JVM Configuration in Standalone Mode</h1>
+<h1 id="_jvm_configuration_in_standalone_mode" class="sect0"><a class="anchor" href="#_jvm_configuration_in_standalone_mode"></a>JVM Configuration in Standalone Mode</h1>
+<div class="paragraph">
+<p>This section focuses on configuring the Java Virtual Machine (JVM) when running applications in a standalone environment. Proper JVM configuration is critical for optimizing performance, managing memory, and ensuring the stability of your Java applications. We will explore how to adjust JVM settings, primarily through the <code>standalone.conf</code> file, which is a common practice for application servers like WildFly or JBoss EAP operating in standalone mode.</p>
+</div>
+<div class="sect1">
+<h2 id="_understanding_jvm_configuration_in_standalone_mode"><a class="anchor" href="#_understanding_jvm_configuration_in_standalone_mode"></a>Understanding JVM Configuration in Standalone Mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In a standalone environment, an application server or a Java application typically runs as a single process with its own dedicated JVM. Configuring this JVM involves setting various options that control its memory allocation, garbage collection behavior, threading, and other runtime characteristics. The primary goal is to tailor the JVM&#8217;s operation to the specific demands of the application and the available system resources.</p>
+</div>
+<div class="paragraph">
+<p>The most common file used for JVM configuration in a standalone application server (like WildFly or JBoss EAP) is <code>standalone.conf</code> (or <code>standalone.conf.bat</code> on Windows). This script is executed before the main server process starts and is responsible for setting up the environment variables, including the critical <code>JAVA_OPTS</code> variable, which passes arguments directly to the JVM.</p>
+</div>
+<div class="paragraph">
+<p>The <code>JAVA_OPTS</code> environment variable is a collection of command-line arguments that are processed by the <code>java</code> launcher. These arguments dictate how the JVM will behave once it starts.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [screenshot] here to show the typical location of <code>standalone.conf</code> within an application server installation directory (e.g., <code>WILDFLY_HOME/bin</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_key_jvm_configuration_parameters"><a class="anchor" href="#_key_jvm_configuration_parameters"></a>Key JVM Configuration Parameters</h3>
+<div class="paragraph">
+<p>While there are hundreds of JVM options, some are more frequently configured to address common performance and memory management challenges:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Memory Allocation:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-Xms&lt;size&gt;</code>: Sets the initial (minimum) heap size for the JVM. For example, <code>-Xms512m</code> sets the initial heap to 512 megabytes.</p>
+</li>
+<li>
+<p><code>-Xmx&lt;size&gt;</code>: Sets the maximum heap size for the JVM. For example, <code>-Xmx2g</code> sets the maximum heap to 2 gigabytes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Garbage Collection:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-XX:+UseG1GC</code>: Enables the G1 (Garbage-First) Garbage Collector, often a good general-purpose choice for modern applications.</p>
+</li>
+<li>
+<p><code>-XX:MaxGCPauseMillis=&lt;milliseconds&gt;</code>: A soft goal for the maximum pause time of the garbage collector. For example, <code>-XX:MaxGCPauseMillis=200</code>.</p>
+</li>
+<li>
+<p><code>-XX:+PrintGCDetails</code>: Enables detailed garbage collection logging, useful for analyzing GC behavior and tuning.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Other Common Options:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-D&lt;property&gt;=&lt;value&gt;</code>: Sets system properties that Java applications can read at runtime. For example, <code>-Djboss.node.name=server1</code> sets a custom node name for the application server.</p>
+</li>
+<li>
+<p><code>-server</code>: Selects the "server" JVM, which is optimized for long-running server applications, typically providing higher peak performance than the "client" JVM. This is often the default or recommended choice for production deployments.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The transcript mentions "any values if you need to configure inside standalone.conf you can append those values here okay these two java options are defined you can append any values in front of this if you need". This refers to adding or modifying the JVM options within the <code>JAVA_OPTS</code> variable. For example, you might see existing <code>JAVA_OPTS</code> settings and append your desired options to them.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hands_on_lab_configuring_jvm_memory_in_standalone_mode"><a class="anchor" href="#_hands_on_lab_configuring_jvm_memory_in_standalone_mode"></a>Hands-on Lab: Configuring JVM Memory in Standalone Mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This lab guides you through modifying the JVM heap memory settings for a standalone application server (e.g., WildFly or JBoss EAP). Properly sizing the heap is crucial for application performance and preventing <code>OutOfMemoryError</code> issues.</p>
+</div>
+<div class="sect2">
+<h3 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h3>
+<div class="paragraph">
+<p>To modify the minimum and maximum heap memory allocated to a standalone application server by editing its <code>standalone.conf</code> file and verifying the changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A Linux-based operating system.</p>
+</li>
+<li>
+<p>A working installation of a Java application server (e.g., WildFly or JBoss EAP) running in standalone mode. We&#8217;ll assume the installation directory is <code>/opt/jboss/wildfly</code> for this lab.</p>
+</li>
+<li>
+<p>Basic command-line knowledge.</p>
+</li>
+<li>
+<p><code>sudo</code> or root privileges to modify configuration files if installed in a protected directory.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-Step Instructions</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Locate the <code>standalone.conf</code> file</strong>:
+Navigate to the <code>bin</code> directory of your application server installation.
+<code><code>bash
+cd /opt/jboss/wildfly/bin
+</code></code>
+The <code>standalone.conf</code> file contains the default JVM options and environment configurations for standalone mode.</p>
+</li>
+<li>
+<p><strong>Backup the original configuration file</strong>:
+It&#8217;s always a good practice to create a backup before making any changes.
+<code><code>bash
+cp standalone.conf standalone.conf.bak
+</code></code></p>
+</li>
+<li>
+<p><strong>Edit the <code>standalone.conf</code> file</strong>:
+Open <code>standalone.conf</code> using a text editor (e.g., <code>vi</code> or <code>nano</code>).
+<code><code>bash
+vi standalone.conf
+</code></code></p>
+</li>
+<li>
+<p><strong>Identify and modify <code>JAVA_OPTS</code></strong>:
+Scroll through the file and locate the section where <code>JAVA_OPTS</code> is defined. You will typically find lines similar to these, which set the default heap sizes:
+<code><code>bash
+# Set the JVM memory allocation
+#JAVA_OPTS="$JAVA_OPTS -Xms128m -Xmx512m"
+</code></code>
+Uncomment these lines (if commented out) and modify the values for <code>-Xms</code> (initial heap size) and <code>-Xmx</code> (maximum heap size). For this lab, let&#8217;s set the initial heap to 512MB and the maximum heap to 1024MB.
+<code><code>bash
+# Set the JVM memory allocation
+JAVA_OPTS="$JAVA_OPTS -Xms512m -Xmx1024m"
+</code></code>
+The transcript also implies you can append additional options. Let&#8217;s also add a garbage collector option for modern JDKs.
+<code><code>bash
+# Set the JVM memory allocation
+JAVA_OPTS="$JAVA_OPTS -Xms512m -Xmx1024m -XX:+UseG1GC"
+</code></code>
+Save and close the file.</p>
+</li>
+<li>
+<p><strong>Restart the application server</strong>:
+Stop the currently running standalone server instance if it&#8217;s active.
+<code><code>bash
+# If running as a systemd service (common for production):
+sudo systemctl stop wildfly
+# If running directly from bin via standalone.sh:
+/opt/jboss/wildfly/bin/jboss-cli.sh --connect --command=:shutdown
+</code></code>
+Start the server again to apply the new JVM settings.
+<code><code>bash
+# If running as a systemd service:
+sudo systemctl start wildfly
+# If running directly from bin (in a new terminal or detached):
+/opt/jboss/wildfly/bin/standalone.sh &amp;
+</code></code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h3>
+<div class="paragraph">
+<p>The application server starts successfully, utilizing the newly configured initial and maximum heap sizes. There should be no immediate <code>OutOfMemoryError</code> or startup failures related to JVM configuration. The server logs should reflect the new JVM options being used.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Check server logs</strong>:
+Review the server logs, typically located at <code>/opt/jboss/wildfly/standalone/log/server.log</code>. Look for messages that indicate the JVM arguments used during startup or details about the JVM options. You might see entries explicitly listing the <code>-Xms</code> and <code>-Xmx</code> values.</p>
+</li>
+<li>
+<p><strong>Use <code>jps</code> and <code>jinfo</code> (if available)</strong>:
+<code>jps</code> (JVM Process Status Tool) lists the Java processes.
+<code><code>bash
+jps -v
+</code></code>
+Look for your application server process (e.g., <code>jboss-modules.jar</code> or a class related to your server&#8217;s main process). Note its Process ID (PID).
+Then use <code>jinfo</code> to inspect the JVM arguments of that specific process.
+<code><code>bash
+jinfo &lt;PID_of_your_server_process&gt; | grep -E "Xms|Xmx|UseG1GC"
+</code></code>
+You should see output similar to:
+<code>`
+-Xms512m
+-Xmx1024m
+-XX:+UseG1GC
+</code>`</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [screenshot] here to show the output of <code>jinfo</code> command confirming the JVM options after configuration.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Server fails to start with <code>OutOfMemoryError</code> (Heap related)</strong>:
+This usually indicates that the configured maximum heap size (<code>-Xmx</code>) is too low for the application or that the application has a severe memory leak. Conversely, if you set <code>-Xmx</code> <strong>too high</strong> (more than available physical RAM, accounting for the operating system and other processes), the system might start swapping heavily, leading to severe performance degradation or even JVM startup failure due to insufficient contiguous memory.
+<strong>Solution</strong>: Increase <code>-Xmx</code> cautiously, ensuring it does not exceed available physical memory. Monitor memory usage before and after changes.</p>
+</li>
+<li>
+<p><strong>Incorrect syntax in <code>standalone.conf</code></strong>:
+If you make a typo or use an invalid JVM option, the server might fail to start or report an error during startup. The startup logs are crucial for identifying such errors.
+<strong>Solution</strong>: Double-check your entries in <code>standalone.conf</code> for correct syntax. Refer to Oracle/OpenJDK documentation for valid JVM options. The server startup logs usually provide clear clues about parsing errors.</p>
+</li>
+<li>
+<p><strong>Server fails to start after setting <code>-XX:+UseG1GC</code></strong>:
+This might happen if your JDK version is very old and doesn&#8217;t support G1GC, or if there&#8217;s a conflict with other garbage collector settings.
+<strong>Solution</strong>: Check your JDK version. G1GC is standard in JDK 7u4 and later, and became the default from JDK 9 onwards. If you&#8217;re on an older JDK, try a different GC (e.g., ParallelGC) or upgrade your JDK.</p>
+</li>
+<li>
+<p><strong>Changes not taking effect</strong>:
+Ensure you have <strong>saved</strong> the <code>standalone.conf</code> file and <strong>restarted</strong> the application server completely. Configuration changes often require a full server restart to be applied. Also, verify that the <code>standalone.conf</code> you edited is indeed the one being used by your server startup script (e.g., verify the full path).
+<strong>Solution</strong>: Confirm file saving, perform a clean shutdown and start, and check the server&#8217;s startup logs for explicit mentions of the configuration file it&#8217;s loading.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_best_practices_and_advanced_considerations"><a class="anchor" href="#_best_practices_and_advanced_considerations"></a>Best Practices and Advanced Considerations</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Monitor and Iterate</strong>: JVM tuning is an iterative process. Start with reasonable defaults, then monitor your application&#8217;s performance and memory usage under load. Tools like JConsole, VisualVM, or commercial Application Performance Monitoring (APM) solutions can help gather data for informed decisions.</p>
+</li>
+<li>
+<p><strong>Environment-Specific Tuning</strong>: The transcript briefly mentions considerations for "normal environment VM" versus "OpenShift."</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Traditional VMs</strong>: You typically allocate a fixed amount of RAM for the JVM heap using <code>-Xms</code> and <code>-Xmx</code>. These values should be chosen to be less than the VM&#8217;s total allocated memory to leave room for the OS and other JVM memory areas.</p>
+</li>
+<li>
+<p><strong>Containerized Environments (e.g., OpenShift, Kubernetes)</strong>: While you still set <code>-Xms</code> and <code>-Xmx</code>, it&#8217;s crucial to align these with the container&#8217;s memory limits. Often, using a smaller <code>-Xms</code> (to allow for faster startup) and allowing the JVM to grow up to <code>-Xmx</code> (which should be less than the container&#8217;s memory limit) can be beneficial. Additionally, newer JDKs and JVM options like <code>-XX:+UseContainerSupport</code> (available from JDK 8u191 and later) help the JVM recognize container-allocated resources more accurately.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>JVM Vendor Differences</strong>: The transcript highlights "JVM vendor, as I said, Oracle and Red Hat." While core JVM options are largely standardized, specific experimental or proprietary options might vary slightly between vendors (e.g., Oracle HotSpot, OpenJDK, Red Hat OpenJDK). Always consult the documentation for your specific JDK distribution.</p>
+</li>
+<li>
+<p><strong>Garbage Collector Selection</strong>: The choice of garbage collector (e.g., G1GC, ParallelGC, CMS - though CMS is deprecated) significantly impacts application pause times and throughput. The optimal choice depends on your application&#8217;s workload, latency requirements, and throughput goals.</p>
+</li>
+<li>
+<p><strong>Non-Heap Memory</strong>: While heap memory is most commonly tuned, remember that the JVM also uses non-heap memory (e.g., Metaspace, thread stacks, direct memory, JIT code cache). Excessive use of non-heap memory can also lead to out-of-memory issues, even if the heap is well-sized. Monitoring these areas is equally important.</p>
+</li>
+<li>
+<p><strong>System Properties (<code>-D</code> options)</strong>: These are powerful for externalizing configuration and can control various aspects of the application or the JVM itself. They are also configured within <code>JAVA_OPTS</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By understanding and applying these configuration principles, you can significantly enhance the performance and reliability of your Java applications running in standalone mode.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a></span>
+  <span class="next"><a href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

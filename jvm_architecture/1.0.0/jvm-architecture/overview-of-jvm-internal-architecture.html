@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Overview of JVM Internal Architecture :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="relationship-between-jdk-jre-and-jvm.html">
+    <link rel="next" href="jvm-memory-structure-heap-non-heap-native-memory.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
+    <li><a href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Overview of JVM Internal Architecture</h1>
+<h1 id="_overview_of_jvm_internal_architecture" class="sect0"><a class="anchor" href="#_overview_of_jvm_internal_architecture"></a>Overview of JVM Internal Architecture</h1>
+<div class="paragraph">
+<p>The Java Virtual Machine (JVM) is a crucial component of the Java platform, acting as a runtime environment that enables Java programs to execute on any device or operating system. It translates Java bytecode into machine-specific instructions, making Java "write once, run anywhere." Understanding its internal architecture is fundamental to optimizing Java application performance and troubleshooting runtime issues.</p>
+</div>
+<div class="paragraph">
+<p>This section delves into the core components that make up the JVM&#8217;s internal structure, explaining how it loads classes, manages memory, and executes code.</p>
+</div>
+<div class="sect2">
+<h3 id="_introduction_to_jvm_internal_architecture"><a class="anchor" href="#_introduction_to_jvm_internal_architecture"></a>Introduction to JVM Internal Architecture</h3>
+<div class="paragraph">
+<p>The JVM&#8217;s internal architecture is designed to provide a robust and efficient environment for executing Java applications. When a Java program runs, a JVM instance is created to manage its execution. This instance includes several subsystems that work in concert:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Class Loader Subsystem</strong>: Responsible for loading, linking, and initializing class files.</p>
+</li>
+<li>
+<p><strong>Runtime Data Areas</strong>: Memory regions allocated by the JVM to store various data during program execution, including objects, variables, and method data.</p>
+</li>
+<li>
+<p><strong>Execution Engine</strong>: Responsible for executing the bytecode loaded by the Class Loader.</p>
+</li>
+<li>
+<p><strong>Native Method Interface (JNI)</strong>: Allows Java code to interact with applications and libraries written in other languages (like C/C++).</p>
+</li>
+<li>
+<p><strong>Native Method Libraries</strong>: The native libraries required by the Execution Engine.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the complete JVM Internal Architecture, showing Class Loader, Runtime Data Areas, Execution Engine, JNI, and Native Method Libraries.</p>
+</div>
+<div class="sect3">
+<h4 id="_class_loader_subsystem"><a class="anchor" href="#_class_loader_subsystem"></a>Class Loader Subsystem</h4>
+<div class="paragraph">
+<p>The Class Loader Subsystem is the first component of the JVM to become active when a Java application starts. Its primary responsibilities are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Loading</strong>: Finds and loads the binary representation of a class or interface (typically <code>.class</code> files) based on its fully qualified name.</p>
+</li>
+<li>
+<p><strong>Linking</strong>: Verifies the loaded bytecode, prepares static fields, and resolves symbolic references.</p>
+</li>
+<li>
+<p><strong>Initialization</strong>: Executes the static initializers of a class or interface and initializes static fields to their default values.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The JVM typically uses a hierarchical class loading model, consisting of three main class loaders:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Bootstrap ClassLoader</strong>: The topmost class loader, responsible for loading core Java API classes (e.g., <code>java.lang.*</code>) from the <code>rt.jar</code> (or modular images in modern Java). It is implemented in native code.</p>
+</li>
+<li>
+<p><strong>Extension ClassLoader</strong>: A child of the Bootstrap ClassLoader, it loads classes from the <code>ext</code> directory (extensions directory) of the JRE.</p>
+</li>
+<li>
+<p><strong>Application ClassLoader (System ClassLoader)</strong>: A child of the Extension ClassLoader, it loads classes from the application&#8217;s classpath. This is the class loader that typically loads your application&#8217;s classes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This delegation model ensures that core Java API classes are loaded by the Bootstrap ClassLoader, preventing malicious code from replacing fundamental Java functionality.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_runtime_data_areas_jvm_memory_structure"><a class="anchor" href="#_runtime_data_areas_jvm_memory_structure"></a>Runtime Data Areas (JVM Memory Structure)</h4>
+<div class="paragraph">
+<p>The JVM allocates several runtime data areas to store information needed during program execution. These areas are created when the JVM starts and are destroyed when the JVM exits. Some are per-thread, while others are shared among all threads.</p>
+</div>
+<div class="paragraph">
+<p>The transcript notes that "all this heap is part of RAM and other methods are the native memory." This highlights the distinction between the JVM&#8217;s managed memory (primarily Heap and Metaspace) and other memory used by the JVM itself or native libraries, which can be thought of as "native memory."</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the JVM Runtime Data Areas, clearly showing Heap, Method Area (Metaspace), JVM Stacks, PC Registers, and Native Method Stacks.</p>
+</div>
+<div class="sect4">
+<h5 id="_heap_memory"><a class="anchor" href="#_heap_memory"></a>Heap Memory</h5>
+<div class="paragraph">
+<p>The Heap is the largest runtime data area and is shared among all threads. It&#8217;s where all objects and their corresponding instance variables and arrays are stored. The Java Garbage Collector (GC) is responsible for automatically managing memory within the Heap, reclaiming space from objects that are no longer referenced by the application.</p>
+</div>
+<div class="paragraph">
+<p>The transcript mentions "eden, gen-gen, old-gen, metaspace or pom-gen." This refers to the generational garbage collection model that divides the Heap into different areas to optimize garbage collection.</p>
+</div>
+<div class="paragraph">
+<p>Heap memory is typically divided into three main generations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Young Generation (Young Gen)</strong>: This is where new objects are initially allocated. It is further divided into:</p>
+</li>
+<li>
+<p><strong>Eden Space</strong>: The primary allocation space for new objects.</p>
+</li>
+<li>
+<p><strong>Survivor Spaces (S0 and S1)</strong>: Objects that survive a garbage collection cycle in Eden are moved to a Survivor space. They are swapped back and forth between S0 and S1 with each minor GC.</p>
+</li>
+<li>
+<p><strong>Old Generation (Old Gen)</strong>: Objects that have survived multiple minor garbage collection cycles in the Young Generation are promoted to the Old Generation. This area is typically collected less frequently by major garbage collectors.</p>
+</li>
+<li>
+<p><strong>Metaspace</strong> (in Java 8 and later, replacing PermGen): While not strictly part of the Heap for object data, Metaspace is a critical memory area that stores metadata about classes and methods. Unlike PermGen (which was part of the Heap and had a fixed size), Metaspace uses native memory and expands dynamically up to a specified maximum or until the system runs out of memory.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The size of the Heap is configurable, allowing you to allocate a specific portion of your system&#8217;s RAM to the JVM. For example, as noted in the transcript, "if you have a 10-GB RAM and I provide two GB heap to JVM, so that means JVM will, can take at max two GB out of RAM." This configuration is vital for performance tuning.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_non_heap_memory"><a class="anchor" href="#_non_heap_memory"></a>Non-Heap Memory</h5>
+<div class="paragraph">
+<p>Beyond the Heap, the JVM utilizes other memory areas that are often referred to collectively as "non-heap memory" or "native memory" when discussing the JVM&#8217;s overall memory footprint. These include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JVM Stacks</strong>: Each thread in a Java application has its own private JVM Stack. This stack stores local variables, partial results, and data for method calls (frames). When a method is invoked, a new frame is pushed onto the stack; when the method completes, the frame is popped.</p>
+</li>
+<li>
+<p><strong>PC (Program Counter) Registers</strong>: Each thread also has its own PC Register. It stores the address of the currently executing JVM instruction. If the method is native, the PC register&#8217;s value is undefined.</p>
+</li>
+<li>
+<p><strong>Native Method Stacks</strong>: For threads executing native methods (methods written in languages other than Java, accessed via JNI), a separate Native Method Stack is allocated.</p>
+</li>
+<li>
+<p><strong>Method Area</strong>: Conceptually, this is where class structures (runtime constant pool, field and method data, method&#8217;s code) are stored. In Java 8 and later, the implementation of the Method Area is the <strong>Metaspace</strong>, which resides in native memory. Prior to Java 8, it was implemented as <strong>PermGen</strong> (Permanent Generation) within the Heap.</p>
+</li>
+<li>
+<p><strong>Direct Memory</strong>: Used by NIO (New Input/Output) direct buffers for high-performance I/O operations, bypassing the JVM Heap. This memory is allocated outside the JVM Heap but managed by the JVM.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The term "native memory" broadly refers to any memory allocated by the JVM or the application <strong>outside</strong> of the Java Heap (and Metaspace in Java 8+). This includes JVM internal structures, JNI direct buffers, thread stacks, and memory used by native libraries loaded by the application.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_execution_engine"><a class="anchor" href="#_execution_engine"></a>Execution Engine</h4>
+<div class="paragraph">
+<p>The Execution Engine is responsible for executing the bytecode loaded by the Class Loader. It consists of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Interpreter</strong>: Reads and executes bytecode instruction by instruction. It&#8217;s relatively slow but quick to start.</p>
+</li>
+<li>
+<p><strong>Just-In-Time (JIT) Compiler</strong>: Identifies "hot spots" (frequently executed code segments) and compiles them into highly optimized native machine code. This compilation happens during runtime, significantly improving performance for long-running applications. The JIT compiler often uses various optimization techniques, such as inlining and escape analysis.</p>
+</li>
+<li>
+<p><strong>Garbage Collector (GC)</strong>: Automatically reclaims memory occupied by objects that are no longer reachable or used by the application. It runs as a daemon thread, periodically scanning the Heap for unreferenced objects and freeing their memory.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hands_on_activity_inspecting_jvm_processes_and_memory"><a class="anchor" href="#_hands_on_activity_inspecting_jvm_processes_and_memory"></a>Hands-on Activity: Inspecting JVM Processes and Memory</h3>
+<div class="paragraph">
+<p>This activity will help you visualize a running JVM process on your system and get a basic understanding of how it appears from the operating system&#8217;s perspective. While it won&#8217;t delve into deep architectural details, it will establish the concept that "a JVM is automatically created" when a Java program runs.</p>
+</div>
+<div class="sect3">
+<h4 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h4>
+<div class="paragraph">
+<p>To observe a running Java Virtual Machine (JVM) process on your system and identify its process ID (PID).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>A Linux-based operating system (e.g., RHEL, CentOS, Ubuntu).</p>
+</li>
+<li>
+<p>JDK installed (as per the upcoming lab: "Installing JDK using Subscription Manager"). For now, any existing JDK installation will suffice.</p>
+</li>
+<li>
+<p>Basic command-line familiarity.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-Step Instructions</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Open your terminal.</strong></p>
+</li>
+<li>
+<p><strong>Create a simple Java program.</strong>
+Create a file named <code>HelloWorld.java</code> with the following content:
+[source,java]
+----
+public class HelloWorld {
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Hello, JVM!");
+        // Keep the program running for a bit to allow inspection
+        Thread.sleep(20000); // Sleep for 20 seconds
+    }
+}
+----</p>
+</li>
+<li>
+<p><strong>Compile the Java program.</strong>
+Navigate to the directory where you saved <code>HelloWorld.java</code> and compile it using <code>javac</code>:
+[source,bash]
+----
+javac HelloWorld.java
+----
+This will create a <code>HelloWorld.class</code> file.</p>
+</li>
+<li>
+<p><strong>Run the Java program in the background.</strong>
+Execute the compiled class using <code>java</code>. We&#8217;ll run it in the background (<code>&amp;</code>) so you can continue using the terminal, and we&#8217;ll keep it running for a few seconds using <code>Thread.sleep()</code> to give us time to inspect it.
+[source,bash]
+----
+java HelloWorld &amp;
+----
+You should see output similar to <code>[1] &lt;process_id&gt;</code> and then "Hello, JVM!". The <code>[1]</code> indicates it&#8217;s the first background job, and <code>&lt;process_id&gt;</code> is the PID of the Java process.</p>
+</li>
+<li>
+<p><strong>Identify the running JVM process.</strong>
+Use the <code>jps</code> (Java Virtual Machine Process Status Tool) command, which lists instrumented HotSpot Java Virtual Machines on the target system.
+[source,bash]
+----
+jps -l
+----
+You should see output similar to this:
+[source,text]
+----
+&lt;process_id&gt; HelloWorld
+&lt;jps_process_id&gt; sun.tools.jps.Jps
+----
+Locate the process with <code>HelloWorld</code> as its main class. The number preceding it is the Process ID (PID) of your JVM instance.</p>
+<div class="literalblock">
+<div class="content">
+<pre>Alternatively, you can use the operating system's `ps` command to find all `java` processes:
+[source,bash]
+----
+ps -ef | grep java
+----
+This will show more detailed information about all `java` processes, including your `HelloWorld` application. Look for the entry containing `java HelloWorld`.</pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Observe the memory usage (optional, basic).</strong>
+While the <code>jps</code> and <code>ps</code> commands show the process, they don&#8217;t give detailed JVM memory. For a very high-level view from the OS perspective, you can use <code>top</code> or <code>htop</code> in another terminal window and sort by memory usage to see your <code>java</code> process. This gives you the total memory (RAM) consumed by the JVM process, which includes the Heap, Metaspace, threads, and native memory.</p>
+</li>
+<li>
+<p><strong>Stop the background process.</strong>
+After inspecting, you can terminate the <code>HelloWorld</code> process. Use the <code>kill</code> command with the PID you found in step 5.
+[source,bash]
+----
+kill &lt;process_id&gt;
+----
+For example, if the PID was <code>12345</code>, you would run <code>kill 12345</code>.
+Then, you can use <code>jps -l</code> again to confirm it&#8217;s no longer running.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h4>
+<div class="paragraph">
+<p>You will have successfully compiled and run a simple Java program, identified its associated JVM process ID using <code>jps</code> or <code>ps</code>, and observed that a JVM instance is created when a Java application starts.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Confirm that <code>HelloWorld.class</code> is generated after compilation.</p>
+</li>
+<li>
+<p>Confirm that "Hello, JVM!" is printed to the console when running the program.</p>
+</li>
+<li>
+<p>Verify that <code>jps -l</code> (or <code>ps -ef | grep java</code>) lists a process named <code>HelloWorld</code> with a specific PID.</p>
+</li>
+<li>
+<p>After killing the process, confirm that <code>jps -l</code> no longer shows the <code>HelloWorld</code> process.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>javac: command not found</code> or <code>java: command not found</code></strong>: This indicates that JDK is not correctly installed or its <code>bin</code> directory is not in your system&#8217;s <code>PATH</code> environment variable. Ensure JDK is installed and <code>PATH</code> is configured.</p>
+</li>
+<li>
+<p><strong><code>Error: Could not find or load main class HelloWorld</code></strong>: This usually means you are not running the <code>java</code> command from the directory containing <code>HelloWorld.class</code>, or there&#8217;s a typo in the class name.</p>
+</li>
+<li>
+<p><strong><code>Permission denied</code> when creating <code>HelloWorld.java</code></strong>: Ensure you have write permissions in the directory where you are creating the file.</p>
+</li>
+<li>
+<p><strong>Process not found after <code>kill &lt;PID&gt;</code></strong>: The process might have already terminated on its own (if <code>Thread.sleep</code> duration was too short or removed) or the PID was incorrect. Re-run <code>jps -l</code> to verify current running Java processes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a></span>
+  <span class="next"><a href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

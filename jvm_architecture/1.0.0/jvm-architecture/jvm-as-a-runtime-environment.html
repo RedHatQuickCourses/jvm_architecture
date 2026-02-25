@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JVM as a Runtime Environment :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="introduction-to-jvm.html">
+    <link rel="next" href="relationship-between-jdk-jre-and-jvm.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Understanding JVM Architecture and Configuration</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/REPLACEREPONAME/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="jvm_architecture" data-version="1.0.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Understanding JVM Architecture and Configuration</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="jvm-architecture.html">JVM Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction-to-jvm.html">Introduction to JVM</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="overview-of-jvm-internal-architecture.html">Overview of JVM Internal Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/setting-up-a-java-development-environment.html">Setting up a Java development environment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/running-java-applications-with-openjdk.html">Running Java applications with OpenJDK</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/generating-heap-and-thread-dumps.html">Generating heap and thread dumps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.html">Analyzing dumps using tools (e.g., VisualVM, jmap, jstack)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../hands-on-lab/hands-on-lab.html">Hands-on Lab</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../hands-on-lab/installing-jdk-using-subscription-manager.html">Installing JDK using Subscription Manager</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Understanding JVM Architecture and Configuration</span>
+    <span class="version">1.0.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Understanding JVM Architecture and Configuration</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
+    <li><a href="jvm-architecture.html">JVM Architecture</a></li>
+    <li><a href="jvm-as-a-runtime-environment.html">JVM as a Runtime Environment</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">JVM as a Runtime Environment</h1>
+<h1 id="_jvm_as_a_runtime_environment" class="sect0"><a class="anchor" href="#_jvm_as_a_runtime_environment"></a>JVM as a Runtime Environment</h1>
+<div class="paragraph">
+<p>A JVM (Java Virtual Machine) is a crucial component in the Java ecosystem, acting as an abstract computing machine that provides a runtime environment for executing Java bytecode. Without a JVM, a compiled Java program (in the form of bytecode) cannot run.</p>
+</div>
+<div class="sect1">
+<h2 id="_introduction_to_jvm_as_a_runtime_environment"><a class="anchor" href="#_introduction_to_jvm_as_a_runtime_environment"></a>Introduction to JVM as a Runtime Environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Virtual Machine (JVM) serves as the core runtime environment that enables Java applications to execute. When a Java source file (<code>.java</code>) is compiled, it is transformed into bytecode (<code>.class</code> files), which is a set of instructions designed for the JVM, not for a specific hardware platform. The JVM then interprets and executes this bytecode on the underlying operating system and hardware.</p>
+</div>
+<div class="paragraph">
+<p>Essentially, the JVM abstracts the underlying hardware and operating system from the Java program. This abstraction is what gives Java its renowned "Write Once, Run Anywhere" capability. Regardless of whether the operating system is Windows, Linux, or macOS, or the underlying hardware architecture is x86 or ARM, a Java application can run on any system that has a compatible JVM installed.</p>
+</div>
+<div class="paragraph">
+<p>Every time a Java program or an application built on Java technology, such as Red Hat JBoss Enterprise Application Platform (EAP), starts, a new JVM instance is created. This instance provides the necessary environment—including memory, execution engine, and class loading mechanisms—for that specific Java application to run.</p>
+</div>
+<div class="paragraph">
+<p>For example, when you start an EAP instance, you are effectively initiating a Java process. Each EAP instance you launch will correspond to a separate JVM process running on your system, each managing its own resources and executing its specific application logic.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here to illustrate the concept of JVM abstracting OS/Hardware for bytecode execution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_write_once_run_anywhere_principle"><a class="anchor" href="#_the_write_once_run_anywhere_principle"></a>The "Write Once, Run Anywhere" Principle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JVM is the cornerstone of Java&#8217;s platform independence.
+The process is as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A Java source code file (<code>.java</code>) is compiled into bytecode (<code>.class</code>) by the Java compiler (<code>javac</code>). This bytecode is a standard, platform-agnostic format.</p>
+</li>
+<li>
+<p>The JVM reads and executes this bytecode.</p>
+</li>
+<li>
+<p>The JVM translates the bytecode into native machine code specific to the underlying operating system and hardware in real-time. This translation often involves a Just-In-Time (JIT) compiler for performance optimization.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This mechanism ensures that developers write their code once, and it can run on any platform where a JVM is available, without needing recompilation for each specific operating system.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_a_jvm_is_created"><a class="anchor" href="#_how_a_jvm_is_created"></a>How a JVM is Created</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A JVM is not a static folder or a pre-existing executable that you explicitly "start" in isolation. Instead, a JVM instance is dynamically created by the operating system whenever you execute a Java program using the <code>java</code> command.</p>
+</div>
+<div class="paragraph">
+<p>Here’s a breakdown of the process:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Request to Execute</strong>: When you type <code>java MyProgram</code> in your terminal or when an application server script (like <code>standalone.sh</code> for JBoss EAP) invokes the <code>java</code> command, the operating system receives a request to execute a Java application.</p>
+</li>
+<li>
+<p><strong>JRE Invocation</strong>: The <code>java</code> command (part of the JRE - Java Runtime Environment) is executed. The JRE contains the JVM implementation.</p>
+</li>
+<li>
+<p><strong>JVM Instantiation</strong>: The JRE initializes a new JVM process. This process sets up the necessary runtime components, including the class loader, runtime data areas (like heap and method area), and the execution engine.</p>
+</li>
+<li>
+<p><strong>Class Loading</strong>: The JVM&#8217;s Class Loader subsystem locates, loads, and links the required <code>.class</code> files (starting with <code>MyProgram.class</code> in our example).</p>
+</li>
+<li>
+<p><strong>Execution</strong>: The JVM&#8217;s execution engine then begins executing the bytecode instructions of <code>MyProgram</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Each distinct execution of a Java application or process will typically result in the creation of its own independent JVM instance, complete with its own memory allocation and execution context.</p>
+</div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting [diagram] here showing the lifecycle of a Java program from source code to JVM execution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hands_on_activity_observing_a_jvm_in_action"><a class="anchor" href="#_hands_on_activity_observing_a_jvm_in_action"></a>Hands-on Activity: Observing a JVM in Action</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This activity demonstrates how a JVM process is created and runs when you execute a simple Java application.</p>
+</div>
+<div class="sect2">
+<h3 id="_objective"><a class="anchor" href="#_objective"></a>Objective</h3>
+<div class="paragraph">
+<p>To observe the creation and termination of a Java Virtual Machine (JVM) process when executing a basic Java "Hello World" program.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JDK (Java Development Kit) Installed</strong>: You need a JDK to compile and run Java programs.</p>
+</li>
+<li>
+<p>If you haven&#8217;t installed JDK, refer to the "Installing JDK using Subscription Manager" lab later in this training.</p>
+</li>
+<li>
+<p><strong>Command Line Access</strong>: Access to a terminal or command prompt.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_by_step_instructions"><a class="anchor" href="#_step_by_step_instructions"></a>Step-by-step Instructions</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Verify JDK Installation</strong>
+Open your terminal or command prompt and type the following commands to ensure Java is installed and configured correctly:
+<code><code>bash
+java -version
+javac -version
+</code></code>
+You should see output indicating the installed Java version for both commands. If not, ensure your <code>PATH</code> environment variable is correctly set or install the JDK as per the dedicated lab.</p>
+</li>
+<li>
+<p><strong>Create a Java Source File</strong>
+Create a new file named <code>HelloWorld.java</code> in a directory of your choice (e.g., <code>~/java_examples</code>) with the following content:
+<code><code>java
+// HelloWorld.java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, JVM! This is my first Java program.");
+        try {
+            // Keep the program running for 10 seconds to observe the JVM process
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore the interrupt status
+            System.err.println("Program interrupted.");
+        }
+    }
+}
+</code></code>
+<strong>Note</strong>: The <code>Thread.sleep(10000)</code> line is added to keep the JVM process alive for 10 seconds, allowing you to observe it before it automatically terminates.</p>
+</li>
+<li>
+<p><strong>Compile the Java Source File</strong>
+Navigate to the directory where you saved <code>HelloWorld.java</code> and compile it using the <code>javac</code> command:
+<code><code>bash
+cd ~/java_examples
+javac HelloWorld.java
+</code></code>
+If successful, this command will generate a <code>HelloWorld.class</code> file in the same directory. This <code>.class</code> file contains the Java bytecode.</p>
+</li>
+<li>
+<p><strong>Execute the Java Program and Observe the JVM Process</strong>
+Now, run the compiled Java program using the <code>java</code> command. Immediately after executing, open another terminal window to observe the running Java process.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Terminal 1 (Execute Java Program):</strong>
+<code><code>bash
+java HelloWorld
+</code></code>
+The program will print "Hello, JVM! This is my first Java program." and then pause for 10 seconds.</p>
+</li>
+<li>
+<p><strong>Terminal 2 (Observe JVM Process - Linux/macOS):</strong>
+While the program is paused in Terminal 1, open a new terminal and execute:
+<code><code>bash
+ps -ef | grep java | grep -v grep
+</code></code>
+You should see an output similar to this, indicating the running JVM process:
+<code>`
+&lt;username&gt;  &lt;PID&gt;  1  0 10:00 pts/0 00:00:00 java HelloWorld
+</code>`
+The <code>&lt;PID&gt;</code> is the Process ID of your JVM instance.</p>
+</li>
+<li>
+<p><strong>Terminal 2 (Observe JVM Process - Windows PowerShell):</strong>
+While the program is paused in Terminal 1, open a new PowerShell window and execute:
+<code><code>powershell
+Get-Process java
+</code></code>
+You should see details about the running <code>java</code> process.</p>
+</li>
+<li>
+<p><strong>Terminal 2 (Observe JVM Process - Windows Command Prompt):</strong>
+While the program is paused in Terminal 1, open a new Command Prompt window and execute:
+<code><code>cmd
+tasklist /FI "IMAGENAME eq java.exe"
+</code></code>
+You should see details about the running <code>java.exe</code> process.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Observe JVM Termination</strong>
+After 10 seconds, the <code>HelloWorld</code> program in Terminal 1 will finish execution. Re-run the process observation command in Terminal 2 (<code>ps -ef | grep java | grep -v grep</code> or <code>Get-Process java</code> or <code>tasklist</code>). You will notice that the <code>java HelloWorld</code> process (or <code>java.exe</code>) is no longer listed, indicating that the JVM instance created for your program has terminated.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_outcome"><a class="anchor" href="#_expected_outcome"></a>Expected Outcome</h3>
+<div class="paragraph">
+<p>You will successfully compile and run a simple Java program. During its execution, you will observe a <code>java</code> process running on your system, which represents the JVM instance created to execute your program&#8217;s bytecode. This process will terminate automatically once the Java program finishes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validation_steps"><a class="anchor" href="#_validation_steps"></a>Validation Steps</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>In Terminal 1, verify that "Hello, JVM! This is my first Java program." is printed.</p>
+</li>
+<li>
+<p>In Terminal 2, confirm that a <code>java</code> process running <code>HelloWorld</code> appears during the 10-second sleep period and disappears afterward.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_errors_and_troubleshooting"><a class="anchor" href="#_common_errors_and_troubleshooting"></a>Common Errors and Troubleshooting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>javac: command not found</code> or <code>java: command not found</code></strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: JDK is not installed, or its <code>bin</code> directory is not included in your system&#8217;s <code>PATH</code> environment variable.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Install JDK (if not already) and ensure <code>JAVA_HOME</code> is set correctly, and <code>%JAVA_HOME%\bin</code> (Windows) or <code>$JAVA_HOME/bin</code> (Linux/macOS) is added to your system&#8217;s <code>PATH</code>.</p>
+</li>
+<li>
+<p><strong><code>Error: Could not find or load main class HelloWorld</code></strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: You might be running the <code>java</code> command from the wrong directory, or the <code>HelloWorld.class</code> file was not generated successfully.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Ensure you are in the same directory as <code>HelloWorld.class</code> when running <code>java HelloWorld</code>. Also, verify that <code>javac HelloWorld.java</code> completed without errors.</p>
+</li>
+<li>
+<p><strong>No <code>java</code> process found in <code>ps -ef</code> / <code>Get-Process</code></strong>:</p>
+</li>
+<li>
+<p><strong>Cause</strong>: The program might have finished too quickly, or there&#8217;s an issue with how you&#8217;re checking for processes.</p>
+</li>
+<li>
+<p><strong>Solution</strong>: Ensure you are running the <code>java HelloWorld</code> command and then immediately checking for the process in a <strong>separate</strong> terminal window while the first program is still "sleeping". Double-check the <code>grep</code> or filtering commands for typos.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_takeaways"><a class="anchor" href="#_key_takeaways"></a>Key Takeaways</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The JVM is an abstract machine providing a runtime environment for Java bytecode.</p>
+</li>
+<li>
+<p>It enables Java&#8217;s "Write Once, Run Anywhere" capability by abstracting hardware and OS differences.</p>
+</li>
+<li>
+<p>A new JVM instance is created dynamically each time a Java application (like an EAP server) is executed.</p>
+</li>
+<li>
+<p>Observing the <code>java</code> process in system monitoring tools confirms the JVM&#8217;s existence during program execution.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="introduction-to-jvm.html">Introduction to JVM</a></span>
+  <span class="next"><a href="relationship-between-jdk-jre-and-jvm.html">Relationship between JDK, JRE, and JVM</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

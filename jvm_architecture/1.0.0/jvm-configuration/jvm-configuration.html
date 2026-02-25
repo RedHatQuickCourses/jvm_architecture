@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Parallel GC :: Understanding JVM Architecture and Configuration</title>
+    <title>JVM Configuration :: Understanding JVM Architecture and Configuration</title>
+    <link rel="prev" href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">
+    <link rel="next" href="jvm-memory-allocation-heap-space.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -76,18 +78,18 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../jvm-configuration/jvm-configuration.html">JVM Configuration</a>
+    <a class="nav-link" href="jvm-configuration.html">JVM Configuration</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-configuration/jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
+    <a class="nav-link" href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
+    <a class="nav-link" href="jvm-configuration-in-standalone-mode.html">JVM Configuration in Standalone Mode</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../jvm-configuration/jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
+    <a class="nav-link" href="jvm-configuration-in-domain-mode.html">JVM Configuration in Domain Mode</a>
   </li>
 </ul>
   </li>
@@ -160,7 +162,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Understanding JVM Architecture and Configuration</a></li>
-    <li><a href="parallel-gc.html">Parallel GC</a></li>
+    <li><a href="jvm-configuration.html">JVM Configuration</a></li>
   </ul>
 </nav>
 </div>
@@ -169,80 +171,38 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Parallel GC</h1>
-<div class="sect1">
-<h2 id="_parallel_gc"><a class="anchor" href="#_parallel_gc"></a>Parallel GC</h2>
-<div class="sectionbody">
+<h1 class="page">JVM Configuration</h1>
+<div class="paragraph">
+<p>JVM configuration involves setting various parameters to optimize the Java Virtual Machine&#8217;s performance and resource utilization for specific applications and environments.</p>
+</div>
+<div class="paragraph">
+<p>Key aspects of JVM Configuration include:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Overview</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>The Parallel GC is a garbage collection algorithm designed to improve the performance of garbage collection in multi-processor systems. It is a multi-threaded implementation of the Mark-Sweep-Compact algorithm, which is used to reclaim memory occupied by objects that are no longer in use by the application.</pre>
-</div>
-</div>
+<p><strong>Memory Allocation</strong>: Configuring the JVM&#8217;s memory structures, primarily the heap space.
+<strong>Heap Space Parameters</strong>:
+<strong><code>-Xms</code></strong>: Sets the initial (minimum) size of the Java heap.
+<strong><code>-Xmx</code></strong>: Sets the maximum size of the Java heap.</p>
 </li>
 <li>
-<p><strong>How Parallel GC Works</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>Parallel GC divides the heap into multiple regions and assigns each region to a separate thread. Each thread performs garbage collection on its assigned region independently. This parallel processing allows for faster garbage collection compared to the single-threaded Serial GC.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>When a garbage collection cycle starts, the application threads are paused, and the Parallel GC begins its work. It identifies live objects and compacts them into contiguous memory areas, freeing up space for new object allocation. The key difference from the Serial GC is that Parallel GC utilizes multiple threads to process different heap regions simultaneously, thus reducing the overall garbage collection time.</pre>
-</div>
-</div>
+<p><strong>Modes of Configuration</strong>:
+<strong>Standalone Mode</strong>: JVM parameters are configured for individual application server instances.
+<strong>Domain Mode</strong>: Centralized configuration of JVM parameters for managed servers within a server group.</p>
 </li>
 <li>
-<p><strong>When to Use Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>Parallel GC is suitable for applications with large heaps and multiple processors or cores. It is particularly effective in scenarios where the application has a high allocation rate and frequent garbage collections. However, it may not be the optimal choice for applications with small heaps or those sensitive to pause times, as the stop-the-world nature of garbage collection can still cause noticeable pauses during the collection process.</pre>
-</div>
-</div>
-</li>
-<li>
-<p><strong>Tuning Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>To optimize the performance of Parallel GC, you can adjust various parameters, such as:</pre>
-</div>
-</div>
-</li>
-<li>
-<p><strong>NewRatio</strong>: This parameter controls the ratio of the young generation to the old generation. A higher value allocates more heap space to the young generation, which can reduce the frequency of major garbage collections.</p>
-</li>
-<li>
-<p><strong>ParallelGCThread</strong>: This parameter sets the number of threads used for parallel garbage collection. Increasing this value can improve the performance on multi-processor systems, but it may also increase the overhead of thread management.</p>
-</li>
-<li>
-<p><strong>SurvivorRatio</strong>: This parameter determines the size ratio of eden space to survivor spaces in the young generation. Adjusting this value can help balance the frequency of minor and major garbage collections.</p>
-</li>
-<li>
-<p><strong>Hands-on Activity: Using Parallel GC</strong></p>
-<div class="literalblock">
-<div class="content">
-<pre>To gain practical experience with Parallel GC, follow these steps:</pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Set up a Java development environment with OpenJDK.</p>
-</li>
-<li>
-<p>Create a Java application that generates a significant amount of garbage, such as a program that continuous</p>
-</li>
-</ol>
-</div>
+<p><strong>Optimizing Options</strong>: Determining the most effective JVM settings often involves considering the deployment environment (e.g., standard VM, OpenShift) and using tools or best practices to generate optimal configuration options.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>FIXME: Suggest inserting a table here to list common JVM configuration parameters (e.g., -Xms, -Xmx, -XX:MetaspaceSize) and their purposes to improve understanding of key settings.</p>
 </div>
-</div>
+<nav class="pagination">
+  <span class="prev"><a href="../jvm-architecture/jvm-memory-structure-heap-non-heap-native-memory.html">JVM Memory Structure (Heap, Non-Heap, Native Memory)</a></span>
+  <span class="next"><a href="jvm-memory-allocation-heap-space.html">JVM Memory Allocation (Heap Space)</a></span>
+</nav>
 </article>
   </div>
 </main>
