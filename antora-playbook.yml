@@ -1,5 +1,5 @@
 site:
-  title:  JVM Architecture
+  title:  Understanding JVM Architecture and Configuration
   start_page: jvm_architecture::index.adoc
 
 content:

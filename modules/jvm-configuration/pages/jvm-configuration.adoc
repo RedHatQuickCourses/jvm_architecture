@@ -1,0 +1,16 @@
+#  JVM Configuration
+
+JVM configuration involves setting various parameters to optimize the Java Virtual Machine's performance and resource utilization for specific applications and environments.
+
+Key aspects of JVM Configuration include:
+
+*   **Memory Allocation**: Configuring the JVM's memory structures, primarily the heap space.
+    **Heap Space Parameters**:
+    **`-Xms`**: Sets the initial (minimum) size of the Java heap.
+    **`-Xmx`**: Sets the maximum size of the Java heap.
+*   **Modes of Configuration**:
+    **Standalone Mode**: JVM parameters are configured for individual application server instances.
+    **Domain Mode**: Centralized configuration of JVM parameters for managed servers within a server group.
+*   **Optimizing Options**: Determining the most effective JVM settings often involves considering the deployment environment (e.g., standard VM, OpenShift) and using tools or best practices to generate optimal configuration options.
+
+FIXME: Suggest inserting a table here to list common JVM configuration parameters (e.g., -Xms, -Xmx, -XX:MetaspaceSize) and their purposes to improve understanding of key settings.

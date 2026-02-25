@@ -1,9 +1,9 @@
-=  JVM Architecture
+=  Understanding JVM Architecture and Configuration
 :navtitle: Home
 
 == Introduction
 
-Course Title:  JVM Architecture
+Course Title:  Understanding JVM Architecture and Configuration
 
 Description:
 Course description FIXME
@@ -13,13 +13,9 @@ Duration: FIXME hours
 == Topics covered in this course
 
 
-*  JRE, JVM & JDK Overview
+*  JVM Architecture
 
-*  JVM Internals
-
-*  Garbage Collection
-
-*  JVM Diagnostics
+*  JVM Configuration
 
 *  Hands-on Lab
 

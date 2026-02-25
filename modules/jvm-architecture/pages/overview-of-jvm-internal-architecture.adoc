@@ -1,0 +1,172 @@
+#  Overview of JVM Internal Architecture
+
+= Overview of JVM Internal Architecture
+
+The Java Virtual Machine (JVM) is a crucial component of the Java platform, acting as a runtime environment that enables Java programs to execute on any device or operating system. It translates Java bytecode into machine-specific instructions, making Java "write once, run anywhere." Understanding its internal architecture is fundamental to optimizing Java application performance and troubleshooting runtime issues.
+
+This section delves into the core components that make up the JVM's internal structure, explaining how it loads classes, manages memory, and executes code.
+
+=== Introduction to JVM Internal Architecture
+
+The JVM's internal architecture is designed to provide a robust and efficient environment for executing Java applications. When a Java program runs, a JVM instance is created to manage its execution. This instance includes several subsystems that work in concert:
+
+*   **Class Loader Subsystem**: Responsible for loading, linking, and initializing class files.
+*   **Runtime Data Areas**: Memory regions allocated by the JVM to store various data during program execution, including objects, variables, and method data.
+*   **Execution Engine**: Responsible for executing the bytecode loaded by the Class Loader.
+*   **Native Method Interface (JNI)**: Allows Java code to interact with applications and libraries written in other languages (like C/C++).
+*   **Native Method Libraries**: The native libraries required by the Execution Engine.
+
+FIXME: Suggest inserting [diagram] here to illustrate the complete JVM Internal Architecture, showing Class Loader, Runtime Data Areas, Execution Engine, JNI, and Native Method Libraries.
+
+==== Class Loader Subsystem
+
+The Class Loader Subsystem is the first component of the JVM to become active when a Java application starts. Its primary responsibilities are:
+
+. **Loading**: Finds and loads the binary representation of a class or interface (typically `.class` files) based on its fully qualified name.
+. **Linking**: Verifies the loaded bytecode, prepares static fields, and resolves symbolic references.
+. **Initialization**: Executes the static initializers of a class or interface and initializes static fields to their default values.
+
+The JVM typically uses a hierarchical class loading model, consisting of three main class loaders:
+
+*   **Bootstrap ClassLoader**: The topmost class loader, responsible for loading core Java API classes (e.g., `java.lang.*`) from the `rt.jar` (or modular images in modern Java). It is implemented in native code.
+*   **Extension ClassLoader**: A child of the Bootstrap ClassLoader, it loads classes from the `ext` directory (extensions directory) of the JRE.
+*   **Application ClassLoader (System ClassLoader)**: A child of the Extension ClassLoader, it loads classes from the application's classpath. This is the class loader that typically loads your application's classes.
+
+This delegation model ensures that core Java API classes are loaded by the Bootstrap ClassLoader, preventing malicious code from replacing fundamental Java functionality.
+
+==== Runtime Data Areas (JVM Memory Structure)
+
+The JVM allocates several runtime data areas to store information needed during program execution. These areas are created when the JVM starts and are destroyed when the JVM exits. Some are per-thread, while others are shared among all threads.
+
+The transcript notes that "all this heap is part of RAM and other methods are the native memory." This highlights the distinction between the JVM's managed memory (primarily Heap and Metaspace) and other memory used by the JVM itself or native libraries, which can be thought of as "native memory."
+
+FIXME: Suggest inserting [diagram] here to illustrate the JVM Runtime Data Areas, clearly showing Heap, Method Area (Metaspace), JVM Stacks, PC Registers, and Native Method Stacks.
+
+===== Heap Memory
+
+The Heap is the largest runtime data area and is shared among all threads. It's where all objects and their corresponding instance variables and arrays are stored. The Java Garbage Collector (GC) is responsible for automatically managing memory within the Heap, reclaiming space from objects that are no longer referenced by the application.
+
+The transcript mentions "eden, gen-gen, old-gen, metaspace or pom-gen." This refers to the generational garbage collection model that divides the Heap into different areas to optimize garbage collection.
+
+Heap memory is typically divided into three main generations:
+
+*   **Young Generation (Young Gen)**: This is where new objects are initially allocated. It is further divided into:
+    *   **Eden Space**: The primary allocation space for new objects.
+    *   **Survivor Spaces (S0 and S1)**: Objects that survive a garbage collection cycle in Eden are moved to a Survivor space. They are swapped back and forth between S0 and S1 with each minor GC.
+*   **Old Generation (Old Gen)**: Objects that have survived multiple minor garbage collection cycles in the Young Generation are promoted to the Old Generation. This area is typically collected less frequently by major garbage collectors.
+*   **Metaspace** (in Java 8 and later, replacing PermGen): While not strictly part of the Heap for object data, Metaspace is a critical memory area that stores metadata about classes and methods. Unlike PermGen (which was part of the Heap and had a fixed size), Metaspace uses native memory and expands dynamically up to a specified maximum or until the system runs out of memory.
+
+The size of the Heap is configurable, allowing you to allocate a specific portion of your system's RAM to the JVM. For example, as noted in the transcript, "if you have a 10-GB RAM and I provide two GB heap to JVM, so that means JVM will, can take at max two GB out of RAM." This configuration is vital for performance tuning.
+
+===== Non-Heap Memory
+
+Beyond the Heap, the JVM utilizes other memory areas that are often referred to collectively as "non-heap memory" or "native memory" when discussing the JVM's overall memory footprint. These include:
+
+*   **JVM Stacks**: Each thread in a Java application has its own private JVM Stack. This stack stores local variables, partial results, and data for method calls (frames). When a method is invoked, a new frame is pushed onto the stack; when the method completes, the frame is popped.
+*   **PC (Program Counter) Registers**: Each thread also has its own PC Register. It stores the address of the currently executing JVM instruction. If the method is native, the PC register's value is undefined.
+*   **Native Method Stacks**: For threads executing native methods (methods written in languages other than Java, accessed via JNI), a separate Native Method Stack is allocated.
+*   **Method Area**: Conceptually, this is where class structures (runtime constant pool, field and method data, method's code) are stored. In Java 8 and later, the implementation of the Method Area is the **Metaspace**, which resides in native memory. Prior to Java 8, it was implemented as **PermGen** (Permanent Generation) within the Heap.
+*   **Direct Memory**: Used by NIO (New Input/Output) direct buffers for high-performance I/O operations, bypassing the JVM Heap. This memory is allocated outside the JVM Heap but managed by the JVM.
+
+The term "native memory" broadly refers to any memory allocated by the JVM or the application *outside* of the Java Heap (and Metaspace in Java 8+). This includes JVM internal structures, JNI direct buffers, thread stacks, and memory used by native libraries loaded by the application.
+
+==== Execution Engine
+
+The Execution Engine is responsible for executing the bytecode loaded by the Class Loader. It consists of:
+
+*   **Interpreter**: Reads and executes bytecode instruction by instruction. It's relatively slow but quick to start.
+*   **Just-In-Time (JIT) Compiler**: Identifies "hot spots" (frequently executed code segments) and compiles them into highly optimized native machine code. This compilation happens during runtime, significantly improving performance for long-running applications. The JIT compiler often uses various optimization techniques, such as inlining and escape analysis.
+*   **Garbage Collector (GC)**: Automatically reclaims memory occupied by objects that are no longer reachable or used by the application. It runs as a daemon thread, periodically scanning the Heap for unreferenced objects and freeing their memory.
+
+=== Hands-on Activity: Inspecting JVM Processes and Memory
+
+This activity will help you visualize a running JVM process on your system and get a basic understanding of how it appears from the operating system's perspective. While it won't delve into deep architectural details, it will establish the concept that "a JVM is automatically created" when a Java program runs.
+
+==== Objective
+To observe a running Java Virtual Machine (JVM) process on your system and identify its process ID (PID).
+
+==== Prerequisites
+*   A Linux-based operating system (e.g., RHEL, CentOS, Ubuntu).
+*   JDK installed (as per the upcoming lab: "Installing JDK using Subscription Manager"). For now, any existing JDK installation will suffice.
+*   Basic command-line familiarity.
+
+==== Step-by-Step Instructions
+
+. **Open your terminal.**
+
+. **Create a simple Java program.**
+   Create a file named `HelloWorld.java` with the following content:
+   [source,java]
+   ----
+   public class HelloWorld {
+       public static void main(String[] args) throws InterruptedException {
+           System.out.println("Hello, JVM!");
+           // Keep the program running for a bit to allow inspection
+           Thread.sleep(20000); // Sleep for 20 seconds
+       }
+   }
+   ----
+
+. **Compile the Java program.**
+   Navigate to the directory where you saved `HelloWorld.java` and compile it using `javac`:
+   [source,bash]
+   ----
+   javac HelloWorld.java
+   ----
+   This will create a `HelloWorld.class` file.
+
+. **Run the Java program in the background.**
+   Execute the compiled class using `java`. We'll run it in the background (`&`) so you can continue using the terminal, and we'll keep it running for a few seconds using `Thread.sleep()` to give us time to inspect it.
+   [source,bash]
+   ----
+   java HelloWorld &
+   ----
+   You should see output similar to `[1] <process_id>` and then "Hello, JVM!". The `[1]` indicates it's the first background job, and `<process_id>` is the PID of the Java process.
+
+. **Identify the running JVM process.**
+   Use the `jps` (Java Virtual Machine Process Status Tool) command, which lists instrumented HotSpot Java Virtual Machines on the target system.
+   [source,bash]
+   ----
+   jps -l
+   ----
+   You should see output similar to this:
+   [source,text]
+   ----
+   <process_id> HelloWorld
+   <jps_process_id> sun.tools.jps.Jps
+   ----
+   Locate the process with `HelloWorld` as its main class. The number preceding it is the Process ID (PID) of your JVM instance.
+
+   Alternatively, you can use the operating system's `ps` command to find all `java` processes:
+   [source,bash]
+   ----
+   ps -ef | grep java
+   ----
+   This will show more detailed information about all `java` processes, including your `HelloWorld` application. Look for the entry containing `java HelloWorld`.
+
+. **Observe the memory usage (optional, basic).**
+   While the `jps` and `ps` commands show the process, they don't give detailed JVM memory. For a very high-level view from the OS perspective, you can use `top` or `htop` in another terminal window and sort by memory usage to see your `java` process. This gives you the total memory (RAM) consumed by the JVM process, which includes the Heap, Metaspace, threads, and native memory.
+
+. **Stop the background process.**
+   After inspecting, you can terminate the `HelloWorld` process. Use the `kill` command with the PID you found in step 5.
+   [source,bash]
+   ----
+   kill <process_id>
+   ----
+   For example, if the PID was `12345`, you would run `kill 12345`.
+   Then, you can use `jps -l` again to confirm it's no longer running.
+
+==== Expected Outcome
+You will have successfully compiled and run a simple Java program, identified its associated JVM process ID using `jps` or `ps`, and observed that a JVM instance is created when a Java application starts.
+
+==== Validation Steps
+*   Confirm that `HelloWorld.class` is generated after compilation.
+*   Confirm that "Hello, JVM!" is printed to the console when running the program.
+*   Verify that `jps -l` (or `ps -ef | grep java`) lists a process named `HelloWorld` with a specific PID.
+*   After killing the process, confirm that `jps -l` no longer shows the `HelloWorld` process.
+
+==== Common Errors and Troubleshooting
+*   **`javac: command not found` or `java: command not found`**: This indicates that JDK is not correctly installed or its `bin` directory is not in your system's `PATH` environment variable. Ensure JDK is installed and `PATH` is configured.
+*   **`Error: Could not find or load main class HelloWorld`**: This usually means you are not running the `java` command from the directory containing `HelloWorld.class`, or there's a typo in the class name.
+*   **`Permission denied` when creating `HelloWorld.java`**: Ensure you have write permissions in the directory where you are creating the file.
+*   **Process not found after `kill <PID>`**: The process might have already terminated on its own (if `Thread.sleep` duration was too short or removed) or the PID was incorrect. Re-run `jps -l` to verify current running Java processes.

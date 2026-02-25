@@ -1,17 +1,13 @@
 name: jvm_architecture
-title:  JVM Architecture
+title:  Understanding JVM Architecture and Configuration
 version: 1.0.0
 nav:
 - modules/ROOT/nav.adoc
 - modules/LABENV/nav.adoc
 
-- modules/jre-jvm-jdk-overview/nav.adoc
+- modules/jvm-architecture/nav.adoc
 
-- modules/jvm-internals/nav.adoc
-
-- modules/garbage-collection/nav.adoc
-
-- modules/jvm-diagnostics/nav.adoc
+- modules/jvm-configuration/nav.adoc
 
 - modules/hands-on-lab/nav.adoc
 

@@ -1,0 +1,4 @@
+* xref:jvm-configuration.adoc[]
+** xref:jvm-memory-allocation-heap-space.adoc[]
+** xref:jvm-configuration-in-standalone-mode.adoc[]
+** xref:jvm-configuration-in-domain-mode.adoc[]

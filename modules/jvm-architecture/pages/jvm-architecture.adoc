@@ -1,0 +1,38 @@
+#  JVM Architecture
+
+A Java Virtual Machine (JVM) provides a runtime environment for Java programs to execute. A JVM instance is automatically created whenever a Java application is launched.
+
+The core components of JVM architecture include:
+
+*   **Class Loader:** Responsible for loading Java classes into memory during runtime.
+*   **Runtime Data Areas:** These are memory areas allocated by the JVM during execution.
+
+FIXME: Suggest inserting an *architecture diagram* here to illustrate the internal components of the JVM and their interactions.
+
+**JVM Memory Structure**
+
+JVM memory is primarily categorized into:
+
+*   **Heap Memory:**
+    *   This is a configurable portion of the physical RAM allocated to the JVM.
+    *   It stores all objects, instance variables, and arrays created by the application.
+    *   Its size can be specified (e.g., 2 GB out of 10 GB RAM), limiting the maximum memory the JVM can use for object storage.
+*   **Non-Heap Memory:**
+    *   Stores class metadata, method data, and other internal JVM structures.
+*   **Native Memory (Other):**
+    *   Includes memory used by the JVM itself for its internal operations, such as for C++ code, JNI (Java Native Interface) libraries, and thread stacks.
+
+**Relationship between JDK, JRE, and JVM**
+
+The Java ecosystem components have a hierarchical relationship:
+
+*   **Java Development Kit (JDK):**
+    *   The outermost layer, providing all tools necessary for Java development, including compilers (e.g., `javac`) and other utilities found in the `bin` folder.
+    *   The JDK *contains* the JRE.
+*   **Java Runtime Environment (JRE):**
+    *   Located inside the JDK, the JRE provides the libraries and resources required to *run* Java programs.
+    *   The JRE *contains* the JVM.
+*   **Java Virtual Machine (JVM):**
+    *   The innermost component, responsible for executing the Java bytecode. It provides the concrete runtime environment within the JRE.
+
+FIXME: Suggest inserting a *nested diagram* here to visually represent the relationship and containment structure of JDK, JRE, and JVM.

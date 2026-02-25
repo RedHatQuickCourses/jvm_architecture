@@ -1,0 +1,222 @@
+#  Installing JDK using Subscription Manager
+
+= Installing JDK using Subscription Manager
+
+This section provides a detailed guide on installing the Red Hat build of OpenJDK on a Red Hat Enterprise Linux (RHEL) system using the Subscription Manager and DNF package manager. This method ensures you receive a commercially supported and secure JDK distribution directly from Red Hat.
+
+== Red Hat Build of OpenJDK
+Red Hat provides its own build of OpenJDK, which is a production-ready, open-source implementation of the Java Platform, Standard Edition (Java SE). Red Hat offers commercial support for its OpenJDK builds, making it a preferred choice for enterprise environments. While other vendors like Oracle and IBM also provide JDKs, the core functionality remains consistent, with potential variations in internal features or performance optimizations.
+
+[[installing-jdk-hands-on]]
+== Hands-on Lab: Installing Red Hat build of OpenJDK using Subscription Manager
+
+This lab guides you through the process of installing the Red Hat build of OpenJDK on a RHEL system. We will leverage Red Hat Subscription Management (RHSM) and the DNF package manager to ensure a supported and properly configured installation.
+
+=== Objective
+To successfully install a Red Hat build of OpenJDK (e.g., OpenJDK 11 or 17) on a Red Hat Enterprise Linux system using `subscription-manager` and `dnf`.
+
+=== Prerequisites
+Before proceeding with the installation, ensure you have the following:
+
+*   A Red Hat Enterprise Linux (RHEL) system (e.g., RHEL 8 or RHEL 9).
+*   An active Red Hat subscription attached to your RHEL system.
+*   Root privileges or `sudo` access on the RHEL system.
+*   Active internet connectivity from your RHEL system.
+
+=== Understanding Red Hat Subscription Management (RHSM)
+Red Hat Subscription Management (RHSM) is a client-server technology that manages subscriptions for Red Hat products. On a RHEL system, the `subscription-manager` utility allows you to register your system with Red Hat, attach subscriptions, and enable repositories. Once repositories are enabled, the `dnf` (Dandified YUM) package manager can access the Red Hat content delivery network to install, update, and remove software packages, including OpenJDK.
+
+=== Step-by-Step Instructions
+
+This procedure assumes you have a clean RHEL installation or one where existing Java installations are not interfering (though `alternatives` will help manage multiple versions).
+
+==== Step 1: Verify Subscription Status
+First, confirm that your RHEL system is registered and has an active subscription.
+
+. Open a terminal and switch to the root user or use `sudo`:
++
+[,bash]
+----
+sudo -i
+----
+
+. Check the system's subscription status:
++
+[,bash]
+----
+subscription-manager status
+----
++
+[NOTE]
+--
+The output should indicate that the system is *Subscribed* and the overall status is *Current*. If it shows "Not Subscribed" or "Expired", you will need to register your system and attach a valid subscription.
+--
+
+. If your system is not subscribed, register and attach a subscription:
++
+[,bash]
+----
+subscription-manager register --auto-attach
+----
++
+This command will prompt you for your Red Hat account username and password. After successful registration, it will automatically attach the best available subscription.
+
+==== Step 2: Enable Required Repositories
+To install OpenJDK packages, you need to ensure the correct repositories are enabled. The OpenJDK packages are typically found in the AppStream repository.
+
+. List available repositories:
++
+[,bash]
+----
+subscription-manager repos --list
+----
+
+. Enable the relevant AppStream repository. For RHEL 8, it's typically `rhel-8-for-x86_64-appstream-rpms`. For RHEL 9, it might be `rhel-9-for-x86_64-appstream-rpms`. Adjust the command based on your RHEL version:
++
+[,bash]
+----
+subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms
+----
++
+[NOTE]
+--
+If you are unsure of the exact repository ID, you can use `subscription-manager repos --list | grep -i appstream` to find it.
+--
+
+==== Step 3: Search for OpenJDK Packages
+Before installing, it's good practice to search for available OpenJDK packages to identify the desired version.
+
+. Search for `openjdk` using `dnf`:
++
+[,bash]
+----
+dnf search openjdk
+----
++
+You will see a list of available OpenJDK packages, typically including various versions (e.g., `java-11-openjdk`, `java-17-openjdk`) and development tools (`java-*-openjdk-devel`). For most development and server purposes, installing the `-devel` package is recommended as it includes compilers and other development utilities.
+
+==== Step 4: Install OpenJDK
+Choose the desired OpenJDK version (e.g., OpenJDK 11 or 17) and install its development package.
+
+. Install OpenJDK 11 development kit:
++
+[,bash]
+----
+dnf install java-11-openjdk-devel -y
+----
++
+[NOTE]
+--
+Replace `java-11-openjdk-devel` with `java-17-openjdk-devel` or another specific version if required. The `-y` flag automatically confirms the installation.
+--
+
+. DNF will resolve dependencies and download the necessary packages. Confirm the installation if not using `-y`.
+
+==== Step 5: Verify Installation
+After the installation completes, verify that Java is installed and the correct version is active.
+
+. Check the Java runtime version:
++
+[,bash]
+----
+java -version
+----
++
+The output should show the version you installed (e.g., OpenJDK 11).
+
+. Check the Java compiler version:
++
+[,bash]
+----
+javac -version
+----
++
+This should also reflect the installed OpenJDK version.
+
+==== Step 6: Configure Default Java Version (Optional, for multiple installations)
+If you have multiple Java versions installed on your system, you can use the `alternatives` command to set the default `java` and `javac` executables.
+
+. List available Java alternatives:
++
+[,bash]
+----
+alternatives --config java
+----
++
+You will see a list of installed Java executables and can choose which one to set as the default. Enter the selection number for your preferred version.
+
+. List available Java compiler alternatives:
++
+[,bash]
+----
+alternatives --config javac
+----
++
+Similarly, choose the preferred Java compiler version.
+
+=== Expected Outcome
+Upon successful completion of this lab, you should be able to:
+
+*   Execute `java -version` and `javac -version` commands from the terminal.
+*   See output indicating the Red Hat build of OpenJDK version you installed (e.g., OpenJDK 11 or 17).
+*   Your system will be configured to use this installed JDK for running and compiling Java applications.
+
+=== Validation Steps
+1.  Run `java -version` and confirm the output matches the OpenJDK version you intended to install.
+2.  Run `javac -version` and confirm it also matches.
+3.  (Optional) Compile and run a simple Java "Hello World" program to ensure the JDK is fully functional.
++
+. Create a file `HelloWorld.java`:
++
+[,java]
+----
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, OpenJDK from Red Hat!");
+    }
+}
+----
+
+. Compile the program:
++
+[,bash]
+----
+javac HelloWorld.java
+----
+
+. Run the compiled program:
++
+[,bash]
+----
+java HelloWorld
+----
++
+The expected output is `Hello, OpenJDK from Red Hat!`.
+
+=== Common Errors and Troubleshooting
+
+*   **Error: "This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register."**
+    *   **Cause**: Your RHEL system is not registered with Red Hat.
+    *   **Solution**: Run `sudo subscription-manager register --auto-attach` and provide your Red Hat account credentials.
+
+*   **Error: "No subscriptions found through Auto-attach."**
+    *   **Cause**: Your Red Hat account might not have an active subscription available, or the system could not automatically attach one.
+    *   **Solution**: Verify your Red Hat account's subscription status. You might need to manually attach a specific subscription using `subscription-manager attach --pool=<POOL_ID>`. Use `subscription-manager list --available` to find pool IDs.
+
+*   **Error: "No matching packages to install." or "Error: Unable to find a match: java-11-openjdk-devel"**
+    *   **Cause**: The relevant repository for OpenJDK packages is not enabled, or the package name is incorrect.
+    *   **Solution**:
+        *   Ensure the AppStream repository is enabled (e.g., `subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms`).
+        *   Run `dnf clean all` and then `dnf makecache` to refresh package metadata.
+        *   Use `dnf search openjdk` to confirm the correct package name for your desired version.
+
+*   **Error: "Could not resolve host: access.redhat.com" or similar network errors during DNF operations.**
+    *   **Cause**: Your system lacks internet connectivity or DNS resolution issues.
+    *   **Solution**: Check your network configuration, ensure your system can reach external websites, and verify DNS settings.
+
+*   **Error: Permission denied during installation.**
+    *   **Cause**: You are not running the commands with sufficient privileges.
+    *   **Solution**: Ensure you are using `sudo` before commands that modify system settings or packages, or switch to the root user (`sudo -i`).
+
+FIXME: Suggest inserting [screenshot] here to show `java -version` output after successful installation.
+FIXME: Suggest inserting [screenshot] here to illustrate `alternatives --config java` selection menu.

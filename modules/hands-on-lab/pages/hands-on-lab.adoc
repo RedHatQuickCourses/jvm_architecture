@@ -12,4 +12,14 @@ This hands-on lab is designed to provide practical experience in setting up a Ja
 
 - **Analyzing Dumps Using Tools**: The lab will introduce participants to various tools such as VisualVM, jmap, and jstack, which can be used to analyze heap dump and thread dump files. This will help them understand how to interpret these files and identify potential problems in their Java applications.
 
-This hands-on lab is an essential part of the training, as it allows participants to apply their theoretical knowledge of JVM architecture, internals, garbage collection, and diagnostics in a practical setting.
+This hands-on lab is an essential part of the training, as it allows participants to apply their theoretical knowledge of JVM architecture, internals, garbage collection, and diagnostics in a practical setting.#  Hands-on Lab
+
+The Hands-on Lab offers practical experience in JVM configuration, preparing you for real-world scenarios. Key learning objectives include:
+
+*   xref:jvm-configuration.adoc#_jvm_configuration_in_standalone_mode[Generating and applying optimal JVM configuration options], considering factors like deployment environment (e.g., standard VM, OpenShift) and JVM vendor (e.g., Oracle, Red Hat).
+FIXME: Suggest inserting [screenshot/command output] here to show an example of generating JVM configuration options or common configuration commands.
+*   Experimenting with diverse JVM settings in standalone mode and observing their impact on application behavior.
+*   Developing troubleshooting skills by intentionally exploring various configurations and learning to identify, understand, and resolve exceptions.
+*   xref:installing-jdk.adoc#_installing_jdk_using_subscription_manager[Installing the Java Development Kit (JDK)] using Subscription Manager, a foundational step for JVM management.
+
+This lab emphasizes hands-on experimentation to build a strong understanding of JVM behavior and effective problem-solving techniques.

@@ -1,0 +1,160 @@
+#  JVM as a Runtime Environment
+
+= JVM as a Runtime Environment
+
+A JVM (Java Virtual Machine) is a crucial component in the Java ecosystem, acting as an abstract computing machine that provides a runtime environment for executing Java bytecode. Without a JVM, a compiled Java program (in the form of bytecode) cannot run.
+
+== Introduction to JVM as a Runtime Environment
+
+The Java Virtual Machine (JVM) serves as the core runtime environment that enables Java applications to execute. When a Java source file (`.java`) is compiled, it is transformed into bytecode (`.class` files), which is a set of instructions designed for the JVM, not for a specific hardware platform. The JVM then interprets and executes this bytecode on the underlying operating system and hardware.
+
+Essentially, the JVM abstracts the underlying hardware and operating system from the Java program. This abstraction is what gives Java its renowned "Write Once, Run Anywhere" capability. Regardless of whether the operating system is Windows, Linux, or macOS, or the underlying hardware architecture is x86 or ARM, a Java application can run on any system that has a compatible JVM installed.
+
+Every time a Java program or an application built on Java technology, such as Red Hat JBoss Enterprise Application Platform (EAP), starts, a new JVM instance is created. This instance provides the necessary environment—including memory, execution engine, and class loading mechanisms—for that specific Java application to run.
+
+For example, when you start an EAP instance, you are effectively initiating a Java process. Each EAP instance you launch will correspond to a separate JVM process running on your system, each managing its own resources and executing its specific application logic.
+
+FIXME: Suggest inserting [diagram] here to illustrate the concept of JVM abstracting OS/Hardware for bytecode execution.
+
+== The "Write Once, Run Anywhere" Principle
+
+The JVM is the cornerstone of Java's platform independence.
+The process is as follows:
+
+1.  A Java source code file (`.java`) is compiled into bytecode (`.class`) by the Java compiler (`javac`). This bytecode is a standard, platform-agnostic format.
+2.  The JVM reads and executes this bytecode.
+3.  The JVM translates the bytecode into native machine code specific to the underlying operating system and hardware in real-time. This translation often involves a Just-In-Time (JIT) compiler for performance optimization.
+
+This mechanism ensures that developers write their code once, and it can run on any platform where a JVM is available, without needing recompilation for each specific operating system.
+
+== How a JVM is Created
+
+A JVM is not a static folder or a pre-existing executable that you explicitly "start" in isolation. Instead, a JVM instance is dynamically created by the operating system whenever you execute a Java program using the `java` command.
+
+Here’s a breakdown of the process:
+
+1.  **Request to Execute**: When you type `java MyProgram` in your terminal or when an application server script (like `standalone.sh` for JBoss EAP) invokes the `java` command, the operating system receives a request to execute a Java application.
+2.  **JRE Invocation**: The `java` command (part of the JRE - Java Runtime Environment) is executed. The JRE contains the JVM implementation.
+3.  **JVM Instantiation**: The JRE initializes a new JVM process. This process sets up the necessary runtime components, including the class loader, runtime data areas (like heap and method area), and the execution engine.
+4.  **Class Loading**: The JVM's Class Loader subsystem locates, loads, and links the required `.class` files (starting with `MyProgram.class` in our example).
+5.  **Execution**: The JVM's execution engine then begins executing the bytecode instructions of `MyProgram`.
+
+Each distinct execution of a Java application or process will typically result in the creation of its own independent JVM instance, complete with its own memory allocation and execution context.
+
+FIXME: Suggest inserting [diagram] here showing the lifecycle of a Java program from source code to JVM execution.
+
+== Hands-on Activity: Observing a JVM in Action
+
+This activity demonstrates how a JVM process is created and runs when you execute a simple Java application.
+
+=== Objective
+
+To observe the creation and termination of a Java Virtual Machine (JVM) process when executing a basic Java "Hello World" program.
+
+=== Prerequisites
+
+*   **JDK (Java Development Kit) Installed**: You need a JDK to compile and run Java programs.
+    *   If you haven't installed JDK, refer to the "Installing JDK using Subscription Manager" lab later in this training.
+*   **Command Line Access**: Access to a terminal or command prompt.
+
+=== Step-by-step Instructions
+
+.  **Verify JDK Installation**
+    Open your terminal or command prompt and type the following commands to ensure Java is installed and configured correctly:
+    ```bash
+    java -version
+    javac -version
+    ```
+    You should see output indicating the installed Java version for both commands. If not, ensure your `PATH` environment variable is correctly set or install the JDK as per the dedicated lab.
+
+.  **Create a Java Source File**
+    Create a new file named `HelloWorld.java` in a directory of your choice (e.g., `~/java_examples`) with the following content:
+    ```java
+    // HelloWorld.java
+    public class HelloWorld {
+        public static void main(String[] args) {
+            System.out.println("Hello, JVM! This is my first Java program.");
+            try {
+                // Keep the program running for 10 seconds to observe the JVM process
+                Thread.sleep(10000); 
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore the interrupt status
+                System.err.println("Program interrupted.");
+            }
+        }
+    }
+    ```
+    *Note*: The `Thread.sleep(10000)` line is added to keep the JVM process alive for 10 seconds, allowing you to observe it before it automatically terminates.
+
+.  **Compile the Java Source File**
+    Navigate to the directory where you saved `HelloWorld.java` and compile it using the `javac` command:
+    ```bash
+    cd ~/java_examples 
+    javac HelloWorld.java
+    ```
+    If successful, this command will generate a `HelloWorld.class` file in the same directory. This `.class` file contains the Java bytecode.
+
+.  **Execute the Java Program and Observe the JVM Process**
+    Now, run the compiled Java program using the `java` command. Immediately after executing, open another terminal window to observe the running Java process.
+
+    *   **Terminal 1 (Execute Java Program):**
+        ```bash
+        java HelloWorld
+        ```
+        The program will print "Hello, JVM! This is my first Java program." and then pause for 10 seconds.
+
+    *   **Terminal 2 (Observe JVM Process - Linux/macOS):**
+        While the program is paused in Terminal 1, open a new terminal and execute:
+        ```bash
+        ps -ef | grep java | grep -v grep
+        ```
+        You should see an output similar to this, indicating the running JVM process:
+        ```
+        <username>  <PID>  1  0 10:00 pts/0 00:00:00 java HelloWorld
+        ```
+        The `<PID>` is the Process ID of your JVM instance.
+
+    *   **Terminal 2 (Observe JVM Process - Windows PowerShell):**
+        While the program is paused in Terminal 1, open a new PowerShell window and execute:
+        ```powershell
+        Get-Process java
+        ```
+        You should see details about the running `java` process.
+
+    *   **Terminal 2 (Observe JVM Process - Windows Command Prompt):**
+        While the program is paused in Terminal 1, open a new Command Prompt window and execute:
+        ```cmd
+        tasklist /FI "IMAGENAME eq java.exe"
+        ```
+        You should see details about the running `java.exe` process.
+
+.  **Observe JVM Termination**
+    After 10 seconds, the `HelloWorld` program in Terminal 1 will finish execution. Re-run the process observation command in Terminal 2 (`ps -ef | grep java | grep -v grep` or `Get-Process java` or `tasklist`). You will notice that the `java HelloWorld` process (or `java.exe`) is no longer listed, indicating that the JVM instance created for your program has terminated.
+
+=== Expected Outcome
+
+You will successfully compile and run a simple Java program. During its execution, you will observe a `java` process running on your system, which represents the JVM instance created to execute your program's bytecode. This process will terminate automatically once the Java program finishes.
+
+=== Validation Steps
+
+*   In Terminal 1, verify that "Hello, JVM! This is my first Java program." is printed.
+*   In Terminal 2, confirm that a `java` process running `HelloWorld` appears during the 10-second sleep period and disappears afterward.
+
+=== Common Errors and Troubleshooting
+
+*   **`javac: command not found` or `java: command not found`**:
+    *   **Cause**: JDK is not installed, or its `bin` directory is not included in your system's `PATH` environment variable.
+    *   **Solution**: Install JDK (if not already) and ensure `JAVA_HOME` is set correctly, and `%JAVA_HOME%\bin` (Windows) or `$JAVA_HOME/bin` (Linux/macOS) is added to your system's `PATH`.
+*   **`Error: Could not find or load main class HelloWorld`**:
+    *   **Cause**: You might be running the `java` command from the wrong directory, or the `HelloWorld.class` file was not generated successfully.
+    *   **Solution**: Ensure you are in the same directory as `HelloWorld.class` when running `java HelloWorld`. Also, verify that `javac HelloWorld.java` completed without errors.
+*   **No `java` process found in `ps -ef` / `Get-Process`**:
+    *   **Cause**: The program might have finished too quickly, or there's an issue with how you're checking for processes.
+    *   **Solution**: Ensure you are running the `java HelloWorld` command and then immediately checking for the process in a *separate* terminal window while the first program is still "sleeping". Double-check the `grep` or filtering commands for typos.
+
+== Key Takeaways
+
+*   The JVM is an abstract machine providing a runtime environment for Java bytecode.
+*   It enables Java's "Write Once, Run Anywhere" capability by abstracting hardware and OS differences.
+*   A new JVM instance is created dynamically each time a Java application (like an EAP server) is executed.
+*   Observing the `java` process in system monitoring tools confirms the JVM's existence during program execution.

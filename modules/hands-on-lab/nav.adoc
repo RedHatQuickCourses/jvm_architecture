@@ -3,3 +3,5 @@
 ** xref:running-java-applications-with-openjdk.adoc[]
 ** xref:generating-heap-and-thread-dumps.adoc[]
 ** xref:analyzing-dumps-using-tools-eg-visualvm-jmap-jstack.adoc[]
+* xref:hands-on-lab.adoc[]
+** xref:installing-jdk-using-subscription-manager.adoc[]
