@@ -6,7 +6,7 @@
 Course Title:  Understanding JVM Architecture and Configuration
 
 Description:
-Course description FIXME
+This course provides a deep dive into the internal architecture of the Java Virtual Machine (JVM). You will explore how the JVM acts as a runtime environment, understand its memory structures (Heap, Non-Heap, and Native Memory), and learn how to configure JVM memory allocation in both standalone and domain modes. Finally, you will apply this knowledge in hands-on labs to generate and analyze heap and thread dumps.
 
 Duration: FIXME hours
 
@@ -25,6 +25,6 @@ Duration: FIXME hours
 
 This course assumes that you have the following prior experience:
 
-* Course or experience...
-* Course or experience...
-* Course or experience...
+* Basic understanding of the Java programming language.
+* Familiarity with Linux command-line operations.
+* Understanding of basic system resources (CPU, Memory).
