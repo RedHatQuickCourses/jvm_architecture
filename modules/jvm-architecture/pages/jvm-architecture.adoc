@@ -7,7 +7,47 @@ The core components of JVM architecture include:
 *   **Class Loader:** Responsible for loading Java classes into memory during runtime.
 *   **Runtime Data Areas:** These are memory areas allocated by the JVM during execution.
 
-FIXME: Suggest inserting an *architecture diagram* here to illustrate the internal components of the JVM and their interactions.
+graph TD
+    %% Define styles for distinct areas
+    classDef runtime fill:#f9f,stroke:#333,stroke-width:2px,color:black;
+    classDef engine fill:#ccf,stroke:#333,stroke-width:2px,color:black;
+    classDef native fill:#ff9,stroke:#333,stroke-width:2px,color:black;
+
+    Source[".java Source Code"] --> Compiler[("Compiler\n(javac)")]
+    Compiler --> Bytecode[".class Bytecode"]
+
+    subgraph JVM [Java Virtual Machine]
+        direction TB
+
+        Bytecode --> ClassLoader["Class Loader Subsystem"]
+
+        subgraph RuntimeAreas [Runtime Data Areas (Memory)]
+            direction LR
+            MethodArea["Method Area"]:::runtime
+            HeapArea["Heap Area"]:::runtime
+            StackArea["Stack Area"]:::runtime
+            PCReg["PC Registers"]:::runtime
+            NativeStack["Native Method Stack"]:::runtime
+        end
+
+        ClassLoader --> MethodArea
+        ClassLoader --> HeapArea
+
+        subgraph ExecEngine [Execution Engine]
+            direction TB
+            Interpreter["Interpreter"]:::engine
+            JIT["JIT Compiler"]:::engine
+            GC["Garbage Collector"]:::engine
+        end
+
+        %% Interactions
+        ExecEngine <--> RuntimeAreas
+        
+        NativeInterface["Java Native Interface (JNI)"] <--> ExecEngine
+    end
+
+    %% External
+    NativeLibs[("Native Method\nLibraries")] <--> NativeInterface:::native
 
 **JVM Memory Structure**
 
@@ -35,4 +75,27 @@ The Java ecosystem components have a hierarchical relationship:
 *   **Java Virtual Machine (JVM):**
     *   The innermost component, responsible for executing the Java bytecode. It provides the concrete runtime environment within the JRE.
 
-FIXME: Suggest inserting a *nested diagram* here to visually represent the relationship and containment structure of JDK, JRE, and JVM.
+graph TD
+    %% Style the containment structure
+    classDef jvmFill fill:#f9f,stroke:#333,stroke-width:2px,color:black;
+    classDef jreFill fill:#ccf,stroke:#333,stroke-width:2px,color:black;
+    classDef jdkFill fill:#fff,stroke:#333,stroke-width:2px,color:black;
+
+    subgraph JDK [Java Development Kit]
+        direction TB
+        JDK_Tools["<b>Development Tools</b><br/>(javac, jar, javadoc, jdb, keytool...)"]
+        
+        subgraph JRE [Java Runtime Environment]
+            direction TB
+            JRE_Libs["<b>Standard Libraries & Resources</b><br/>(rt.jar, java.lang, java.io, util...)"]
+            
+            subgraph JVM [Java Virtual Machine]
+                JVM_Engine["<b>Execution Engine</b><br/>(Interpreter, JIT, GC, Memory Management)"]
+            end
+        end
+    end
+
+    %% Apply Classes for visual nested look
+    class JDK jdkFill;
+    class JRE jreFill;
+    class JVM jvmFill;

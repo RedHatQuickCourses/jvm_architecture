@@ -1,3 +1,39 @@
 = Lab Environment
 
-FIXME: Instructions for accessing the lab environment for this hands-on based training.
+The hands-on exercises in this course are designed to be run locally on your personal laptop or workstation. There is no hosted lab environment provided.
+
+== Prerequisites for Your Local Environment
+
+To successfully complete the labs in this course, your local machine must meet the following requirements:
+
+* *Operating System:* Linux, macOS, or Windows (Windows Subsystem for Linux (WSL) is recommended for Windows users).
+* *Java Development Kit (JDK):* OpenJDK 11, 17, or 21 must be installed.
+* *System Privileges:* You must have administrator/root access to install software and configure system environment variables.
+* *Internet Connection:* Required to download JDK distributions and any necessary diagnostic tools.
+
+== Verifying Your Setup
+
+Before beginning the course, verify that your environment is ready by opening a terminal or command prompt and running the following commands:
+
+.Check your Java version:
+[source,bash]
+----
+java -version
+----
+_Ensure the output reflects an expected OpenJDK version._
+
+.Check your Java Compiler version:
+[source,bash]
+----
+javac -version
+----
+
+== Required Tools
+
+During the course, you will be using the standard diagnostic tools included with the JDK. Ensure the following command-line tools are available in your system's `PATH`:
+
+* `jmap`
+* `jstack`
+* `jconsole`
+
+Additionally, you may want to download and install https://visualvm.github.io/[VisualVM, window="_blank"] for graphical heap and thread dump analysis, as it is no longer bundled with the standard JDK starting from Java 9.
